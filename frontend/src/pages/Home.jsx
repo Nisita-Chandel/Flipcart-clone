@@ -35,24 +35,24 @@ const categories = [
   
         {/* DEAL SECTION */}
         <Section title="Grab or Gone">
-          <DealCard title="Top Picks" price="Min. 30% Off" img="https://rukminim2.flixcart.com/image/200/200/kz8qsnk0/dress/i/v/u/l-ttj6007878-tokyo-talkies-original-imagbav7e3shh5rz.jpeg" />
-          <DealCard title="Top Collection" price="From ₹1,299" img="https://rukminim2.flixcart.com/image/200/200/xif0q/speaker-mobile/6/n/q/-original-imagg7v2v4tfhz5n.jpeg" />
-          <DealCard title="Under ₹299" price="Special Price" img="https://rukminim2.flixcart.com/image/200/200/kp5sya80/kitchen-tool-set/g/h/m/1-vegetable-chopper-flipkart-smartbuy-original-imag3guxkzg3b4bd.jpeg" />
-          <DealCard title="Best Deals" price="Up to 90% Off" img="https://rukminim2.flixcart.com/image/200/200/kpmy8i80/sleeveless-vest/h/p/f/m-vest-101-one-original-imag3t3zbvcz8sbg.jpeg" />
+          <DealCard title="Top Picks" price="Min. 30% Off" img="https://i.pinimg.com/736x/c0/9d/b5/c09db5748e423667f2827f68481f1c02.jpg" />
+          <DealCard title="Top Collection" price="From ₹1,299" img="https://i.pinimg.com/1200x/82/06/87/820687860ea85d138e9c261eb719aa90.jpg" />
+          <DealCard title="Under ₹299" price="Special Price" img="https://evael.com/cdn/shop/products/c8d28bc8-e5bb-440d-ad79-fde5a6cbfa06.jpg?v=1709339575" />
+          <DealCard title="Best Deals" price="Up to 90% Off" img="https://i.pinimg.com/1200x/6e/a8/05/6ea8053b16e93ef94a6c823bb38c6a7d.jpg" />
         </Section>
   
         {/* SPONSORED */}
         <Section title="Sponsored">
-          <DealCard title="Travel in Style" price="Min. 75% Off" img="https://rukminim2.flixcart.com/image/300/300/xif0q/watch/5/z/j/-original-imagkz8r6mczqvfs.jpeg" />
-          <DealCard title="Elegance Redefined" price="Min. 50% Off" img="https://rukminim2.flixcart.com/image/300/300/xif0q/shoe/e/o/e/8-395746-8-puma-white-blue-original-imaggm6zt5n4ttxb.jpeg" />
-          <DealCard title="Pick Your Kicks" price="Min. 50% Off" img="https://rukminim2.flixcart.com/image/300/300/xif0q/shoe/3/l/k/7-395747-7-puma-grey-original-imaggm6zxptfkygy.jpeg" />
+          <DealCard title="Travel in Style" price="Min. 75% Off" img="https://i.pinimg.com/736x/f4/f2/92/f4f2925bbf19947463c820c791834b07.jpg" />
+          <DealCard title="Elegance Redefined" price="Min. 50% Off" img="https://i.pinimg.com/736x/68/72/b6/6872b6eed01722b91f49d8df8a2d5bd6.jpg" />
+          <DealCard title="Pick Your Kicks" price="Min. 50% Off" img="https://i.pinimg.com/736x/89/33/6d/89336d003403726af36914b838d83ff1.jpg" />
         </Section>
   
         {/* TRENDS */}
         <Section title="Trends You May Like">
-          <DealCard title="Stackable" img="https://rukminim2.flixcart.com/image/200/200/xif0q/jewellery-set/p/y/7/-original-imagmp3a9h5vdq9m.jpeg" />
-          <DealCard title="Fusion Lehenga" img="https://rukminim2.flixcart.com/image/200/200/xif0q/lehenga-choli/8/k/m/free-full-sleeve-nb-213-black-navy-bollywood-original-imaghxw7jffzypgm.jpeg" />
-          <DealCard title="Healthy Cooking" img="https://rukminim2.flixcart.com/image/200/200/xif0q/tawa/q/y/c/non-stick-yes-original-imagp3sygwsfkgdh.jpeg" />
+          <DealCard title="Stackable" img="https://i.pinimg.com/736x/40/05/54/400554a058682df8da2926d1c950aba4.jpg" />
+          <DealCard title="Fusion Lehenga" img="https://i.pinimg.com/736x/ec/6e/69/ec6e696732e5aa9c658559625ed329cd.jpg" />
+          <DealCard title="Healthy Cooking" img="https://i.pinimg.com/1200x/e8/35/ed/e835ed89023c2a6d2d1933321d59efc4.jpg" />
         </Section>
   
       </div>
