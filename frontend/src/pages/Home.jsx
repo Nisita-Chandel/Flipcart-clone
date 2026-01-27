@@ -52,7 +52,7 @@ const categories = [
         <Section title="Trends You May Like">
           <DealCard title="Stackable" img="https://i.pinimg.com/736x/40/05/54/400554a058682df8da2926d1c950aba4.jpg" />
           <DealCard title="Fusion Lehenga" img="https://i.pinimg.com/736x/ec/6e/69/ec6e696732e5aa9c658559625ed329cd.jpg" />
-          <DealCard title="Healthy Cooking" img="https://i.pinimg.com/1200x/e8/35/ed/e835ed89023c2a6d2d1933321d59efc4.jpg" />
+          <DealCard title="Watch Design" img="https://i.pinimg.com/1200x/56/a6/bf/56a6bfd92619492d50ef6b5a23432837.jpg" />
         </Section>
   
       </div>
