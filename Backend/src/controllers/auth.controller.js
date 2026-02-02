@@ -1,114 +1,131 @@
-const userModel = require("../models/user.model")
+const userModel = require("../models/user.model");
 
+/* REGISTER */
+const registerController = async (req, res) => {
+  try {
+    const { fullname, email, password, mobile } = req.body;
 
-const registerController = async(req,res) =>{
-   try {
-    let {fullname,email,password,mobile} = req.body
-
-    if(!fullname || !email || !password || !mobile){
-        return res.status(404).json({
-            message : "All fields are required",
-        })
+    if (!fullname || !email || !password || !mobile) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
     }
 
-    let existingUser = await userModel.findOne({email})
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({
+        message: "User already exists",
+      });
+    }
 
-    if(existingUser)
-        return res.status(422).json({
-        message : "User already exists"
-       })
+    const newUser = await userModel.create({
+      fullname,
+      email,
+      password,
+      mobile,
+    });
 
+    const token = newUser.generateToken();
 
-    let newUser = await userModel.create({
-        fullname,
-        email,
-        password,
-        mobile,
-    })    
-    
-    let token = newUser.generateToken();
-
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+    });
 
     return res.status(201).json({
-        message : "user registered",
-        user : newUser,
-    })
-
-     
-
-    }
-    catch (error) {
+      message: "User registered successfully",
+      user: {
+        id: newUser._id,
+        fullname: newUser.fullname,
+        email: newUser.email,
+        mobile: newUser.mobile,
+        role: newUser.role,
+      },
+    });
+  } catch (error) {
+    console.log("Register error:", error);
     return res.status(500).json({
-        message : "Internal server error",
-        error : error
-    })
-   }
+      message: "Internal server error",
+    });
+  }
+};
 
-}
+/* LOGIN */
+const loginController = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-const loginController = async(req,res) => {
-    try {
-        let { email,password } = req.body;
-        
-        if(!email || !password){
-            return res.status(400).json({
-                message : "All fields are required",
-            })
-        }
-    let user = await userModel.findOne({email});
-
-    if(!user)
-    return res.status(404).json({
-        message : "User not found",
-    })
-
-    let cp = user.comparePass(password);
-
-    if(!cp)
-        return res.status(400).json({
-        message :"Invalid credientials",
-})
-   let token = user.generateToken();
-
-   res.cookie("token",token)
-
-
-   return res.status(200).json({
-    message : "user logged in",
-    user : user,
-   })
-        
-    } catch (error) {
-        return res.status(500).json({
-            message : "Internal server error",
-            error : error,
-        })
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
     }
-}
 
-const logoutController = async(req,res) => {
-    try {
-        let token = req.cookies.token;
-
-        if(!token){
-            return  res.status(404).json({
-            message : "Token not found",
-         })      
-        
-        }
-        await cacheInstance.set(token,"blacklisted")
-
-        res.clearCookies("token");
-
-            return res.status(200).json({
-                message : "User logged out",
-            })
-        
-    } catch (error) {
-        return res.status(500).json({
-            message : "Internal server error",
-            error : "error",
-        })
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
     }
-}
-module.exports = {registerController,loginController,logoutController}
+
+    const isMatch = await user.comparePass(password);
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+    }
+
+    const token = user.generateToken();
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+    });
+
+    return res.status(200).json({
+      message: "User logged in successfully",
+      user: {
+        id: user._id,
+        fullname: user.fullname,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.log("Login error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+/* LOGOUT (Redis OPTIONAL) */
+const logoutController = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(404).json({
+        message: "Token not found",
+      });
+    }
+
+    // Redis disabled for now – safe logout
+    res.clearCookie("token");
+
+    return res.status(200).json({
+      message: "User logged out successfully",
+    });
+  } catch (error) {
+    console.log("Logout error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+module.exports = {
+  registerController,
+  loginController,
+  logoutController,
+};
