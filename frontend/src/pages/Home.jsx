@@ -42,7 +42,7 @@ const Home = () => {
               img: "https://i.pinimg.com/1200x/3d/10/8a/3d108a6c49fcd69b7afcc614c883c1bd.jpg",
             })
           }
-          className="rounded-lg col-span-2 h-[250px] w-150 object-cover cursor-pointer"
+          className="rounded-lg col-span-2 h-[250px] object-cover cursor-pointer"
           src="https://i.pinimg.com/1200x/3d/10/8a/3d108a6c49fcd69b7afcc614c883c1bd.jpg"
         />
 
@@ -53,7 +53,7 @@ const Home = () => {
               img: "https://i.pinimg.com/1200x/c4/f2/8d/c4f28d7ad6d2278c811c7b73db595099.jpg",
             })
           }
-          className="rounded-lg h-[250px] w-150 object-cover cursor-pointer"
+          className="rounded-lg h-[250px] object-cover cursor-pointer"
           src="https://i.pinimg.com/1200x/c4/f2/8d/c4f28d7ad6d2278c811c7b73db595099.jpg"
         />
       </div>
