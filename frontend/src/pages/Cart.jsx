@@ -1,23 +1,51 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 const Cart = () => {
-  // Dummy cart data (you can replace this with real data later)
-  const cartItems = [
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      price: 1999,
-      quantity: 1,
-      image:
-        "https://images.unsplash.com/photo-1518443895471-17c8b7a87f1d",
-    },
-    {
-      id: 2,
-      name: "Smart Watch",
-      price: 2999,
-      quantity: 1,
-      image:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-    },
-  ];
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Get product data sent from ProductDetails
+  const product = location.state;
+
+  // If cart is opened directly without data
+  const [cartItems, setCartItems] = useState(
+    product
+      ? [
+          {
+            id: product.id || Date.now(),
+            name: product.title || product.name,
+            price: Number(product.price) || 0,
+            quantity: 1,
+            image: product.img,
+          },
+        ]
+      : []
+  );
+
+  const increaseQty = (id) => {
+    setCartItems((items) =>
+      items.map((item) =>
+        item.id === id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
+  };
+
+  const decreaseQty = (id) => {
+    setCartItems((items) =>
+      items.map((item) =>
+        item.id === id && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
+  };
+
+  const removeItem = (id) => {
+    setCartItems((items) => items.filter((item) => item.id !== id));
+  };
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -31,7 +59,10 @@ const Cart = () => {
       {cartItems.length === 0 ? (
         <div className="bg-white p-10 rounded-lg shadow text-center">
           <p className="text-gray-600 text-lg">Your cart is empty</p>
-          <button className="mt-6 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+          <button
+            onClick={() => navigate("/")}
+            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+          >
             Continue Shopping
           </button>
         </div>
@@ -47,7 +78,7 @@ const Cart = () => {
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-24 h-24 object-cover rounded"
+                  className="w-24 h-24 object-contain"
                 />
 
                 <div className="flex-1">
@@ -57,13 +88,26 @@ const Cart = () => {
                   <p className="text-gray-600">₹{item.price}</p>
 
                   <div className="flex items-center gap-4 mt-3">
-                    <button className="px-3 py-1 border rounded">−</button>
+                    <button
+                      onClick={() => decreaseQty(item.id)}
+                      className="px-3 py-1 border rounded"
+                    >
+                      −
+                    </button>
                     <span>{item.quantity}</span>
-                    <button className="px-3 py-1 border rounded">+</button>
+                    <button
+                      onClick={() => increaseQty(item.id)}
+                      className="px-3 py-1 border rounded"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
 
-                <button className="text-red-500 hover:text-red-700">
+                <button
+                  onClick={() => removeItem(item.id)}
+                  className="text-red-500 hover:text-red-700"
+                >
                   Remove
                 </button>
               </div>
@@ -91,7 +135,7 @@ const Cart = () => {
               <span>₹{totalPrice}</span>
             </div>
 
-            <button className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition">
+            <button className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">
               Place Order
             </button>
           </div>
