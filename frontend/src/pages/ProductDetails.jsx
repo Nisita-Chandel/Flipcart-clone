@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ProductDetails = () => {
@@ -7,7 +6,7 @@ const ProductDetails = () => {
 
   const product = location.state;
 
-  // If user refreshes page
+  // If user refreshes page and state is lost
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
@@ -24,8 +23,14 @@ const ProductDetails = () => {
     );
   }
 
+  // BUY NOW
   const buyNow = () => {
-    navigate("/cart", { state: product });
+    navigate("/cart", { state: { product, buyNow: true } });
+  };
+
+  // ADD TO CART
+  const addToCart = () => {
+    navigate("/cart", { state: { product } });
   };
 
   return (
@@ -40,7 +45,7 @@ const ProductDetails = () => {
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-xl mx-auto">
         <img
           src={product.img}
-          alt={product.title}
+          alt={product.title || product.name}
           className="h-64 w-full object-contain mb-4"
         />
 
@@ -48,23 +53,32 @@ const ProductDetails = () => {
           {product.title || product.name}
         </h1>
 
-        {product.price && (
-          <p className="text-green-600 text-lg font-semibold">
-            {product.price}
-          </p>
-        )}
+        {/* PRICE */}
+        <p className="text-green-600 text-lg font-semibold">
+          {product.price
+            ? `₹${product.price}`
+            : "⚠️ Price not provided"}
+        </p>
 
         <p className="text-gray-600 mt-4">
           This is the detailed description of the selected product.
         </p>
 
-        {/* BUY NOW BUTTON */}
-        <button
-          onClick={buyNow}
-          className="mt-6 w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600"
-        >
-          Buy Now
-        </button>
+        <div className="mt-6 flex gap-4">
+          <button
+            onClick={addToCart}
+            className="w-1/2 border border-orange-500 text-orange-500 py-3 rounded-lg font-semibold hover:bg-orange-50"
+          >
+            Add to Cart
+          </button>
+
+          <button
+            onClick={buyNow}
+            className="w-1/2 bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600"
+          >
+            Buy Now
+          </button>
+        </div>
       </div>
     </div>
   );
