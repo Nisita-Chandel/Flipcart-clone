@@ -6,13 +6,11 @@ const ProductDetails = () => {
 
   const product = location.state;
 
-  // If user refreshes page and state is lost
+  // If page refreshed
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
-        <p className="text-lg font-semibold mb-4">
-          Product data not found
-        </p>
+        <p className="text-lg font-semibold mb-4">Product data not found</p>
         <button
           onClick={() => navigate("/")}
           className="text-blue-600 font-semibold"
@@ -23,12 +21,10 @@ const ProductDetails = () => {
     );
   }
 
-  // BUY NOW
   const buyNow = () => {
     navigate("/cart", { state: { product, buyNow: true } });
   };
 
-  // ADD TO CART
   const addToCart = () => {
     navigate("/cart", { state: { product } });
   };
@@ -53,15 +49,19 @@ const ProductDetails = () => {
           {product.title || product.name}
         </h1>
 
-        {/* PRICE */}
-        <p className="text-green-600 text-lg font-semibold">
-          {product.price
-            ? `₹${product.price}`
-            : "⚠️ Price not provided"}
+        <p className="text-green-600 text-xl font-semibold">
+          ₹{product.price}
         </p>
+
+        {product.offerText && (
+          <p className="text-sm text-gray-500 mt-1">
+            {product.offerText}
+          </p>
+        )}
 
         <p className="text-gray-600 mt-4">
           This is the detailed description of the selected product.
+          High quality, best price, and fast delivery.
         </p>
 
         <div className="mt-6 flex gap-4">
