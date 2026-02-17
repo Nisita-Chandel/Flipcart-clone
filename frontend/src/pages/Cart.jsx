@@ -1,27 +1,42 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Cart = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Get product data sent from ProductDetails
-  const product = location.state;
+  // Correct way to get product
+  const product = location.state?.product;
 
-  // If cart is opened directly without data
-  const [cartItems, setCartItems] = useState(
-    product
-      ? [
-          {
-            id: product.id || Date.now(),
-            name: product.title || product.name,
-            price: Number(product.price) || 0,
-            quantity: 1,
-            image: product.img,
-          },
-        ]
-      : []
-  );
+  const [cartItems, setCartItems] = useState([]);
+
+  // Add product when page loads
+  useEffect(() => {
+    if (product) {
+      setCartItems([
+        {
+          id: Date.now(),
+          name: product.title || product.name,
+          price: Number(product.price) || 0,
+          quantity: 1,
+          image: product.img,
+        },
+      ]);
+    }
+  }, [product]);
+
+  const placeOrder = () => {
+    alert("🎉 Order Placed Successfully!");
+  
+    // Clear cart
+    setCartItems([]);
+  
+    // Redirect to home after 1 second
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
+  };
+  
 
   const increaseQty = (id) => {
     setCartItems((items) =>
@@ -85,7 +100,11 @@ const Cart = () => {
                   <h3 className="font-semibold text-lg text-gray-800">
                     {item.name}
                   </h3>
-                  <p className="text-gray-600">₹{item.price}</p>
+
+                  {/* PRICE FIXED HERE */}
+                  <p className="text-green-600 font-semibold text-lg">
+                    ₹{item.price}
+                  </p>
 
                   <div className="flex items-center gap-4 mt-3">
                     <button
@@ -94,7 +113,9 @@ const Cart = () => {
                     >
                       −
                     </button>
+
                     <span>{item.quantity}</span>
+
                     <button
                       onClick={() => increaseQty(item.id)}
                       className="px-3 py-1 border rounded"
@@ -118,12 +139,12 @@ const Cart = () => {
           <div className="bg-white rounded-lg shadow p-6 h-fit">
             <h3 className="text-xl font-semibold mb-4">Price Details</h3>
 
-            <div className="flex justify-between text-gray-700 mb-2">
+            <div className="flex justify-between mb-2">
               <span>Items ({cartItems.length})</span>
               <span>₹{totalPrice}</span>
             </div>
 
-            <div className="flex justify-between text-gray-700 mb-2">
+            <div className="flex justify-between mb-2">
               <span>Delivery</span>
               <span className="text-green-600">FREE</span>
             </div>
@@ -135,9 +156,13 @@ const Cart = () => {
               <span>₹{totalPrice}</span>
             </div>
 
-            <button className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">
-              Place Order
-            </button>
+            <button
+  onClick={placeOrder}
+  className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
+>
+  Place Order
+</button>
+
           </div>
         </div>
       )}
