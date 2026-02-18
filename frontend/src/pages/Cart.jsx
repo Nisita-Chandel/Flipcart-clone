@@ -5,38 +5,52 @@ const Cart = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Correct way to get product
+  // Get product safely
   const product = location.state?.product;
 
   const [cartItems, setCartItems] = useState([]);
 
-  // Add product when page loads
+  // ✅ Add product without replacing old ones
   useEffect(() => {
     if (product) {
-      setCartItems([
-        {
-          id: Date.now(),
-          name: product.title || product.name,
-          price: Number(product.price) || 0,
-          quantity: 1,
-          image: product.img,
-        },
-      ]);
+      setCartItems((prevItems) => {
+        // Check if product already exists
+        const existingItem = prevItems.find(
+          (item) => item.name === (product.title || product.name)
+        );
+
+        if (existingItem) {
+          // Increase quantity if already in cart
+          return prevItems.map((item) =>
+            item.name === (product.title || product.name)
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          );
+        } else {
+          // Add new product
+          return [
+            ...prevItems,
+            {
+              id: Date.now(),
+              name: product.title || product.name,
+              price: Number(product.price) || 0,
+              quantity: 1,
+              image: product.img,
+            },
+          ];
+        }
+      });
     }
   }, [product]);
 
   const placeOrder = () => {
     alert("🎉 Order Placed Successfully!");
-  
-    // Clear cart
     setCartItems([]);
-  
-    // Redirect to home after 1 second
+
     setTimeout(() => {
       navigate("/");
     }, 1000);
   };
-  
 
   const increaseQty = (id) => {
     setCartItems((items) =>
@@ -101,7 +115,6 @@ const Cart = () => {
                     {item.name}
                   </h3>
 
-                  {/* PRICE FIXED HERE */}
                   <p className="text-green-600 font-semibold text-lg">
                     ₹{item.price}
                   </p>
@@ -157,12 +170,11 @@ const Cart = () => {
             </div>
 
             <button
-  onClick={placeOrder}
-  className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
->
-  Place Order
-</button>
-
+              onClick={placeOrder}
+              className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
+            >
+              Place Order
+            </button>
           </div>
         </div>
       )}

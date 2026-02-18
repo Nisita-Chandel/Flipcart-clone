@@ -4,8 +4,8 @@ const ProductDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Get product safely
-  const product = location.state;
+  // ✅ Correct way to get product
+  const product = location.state?.product;
 
   // If user refreshes page
   if (!product) {
@@ -58,9 +58,8 @@ const ProductDetails = () => {
             {product.title || product.name}
           </h1>
 
-          {/* Price Fix */}
           <p className="text-3xl text-green-600 font-bold mb-2">
-            ₹{product.price ? product.price : 0}
+            ₹{product.price || 0}
           </p>
 
           {product.offerText && (

@@ -7,26 +7,32 @@ const categories = [
   {
     name: "Fashion",
     img: "https://rukminim2.flixcart.com/flap/128/128/image/29327f40e9c4d26b.png",
+    price: 799,
   },
   {
     name: "Travel",
     img: "https://rukminim2.flixcart.com/flap/128/128/image/22fddf3c7da4c4f4.png",
+    price: 1499,
   },
   {
     name: "Appliances",
     img: "https://rukminim2.flixcart.com/flap/128/128/image/69c6589653afdb9a.png",
+    price: 4999,
   },
   {
     name: "Beauty",
     img: "https://rukminim2.flixcart.com/flap/128/128/image/0ff199d1bd27eb98.png",
+    price: 599,
   },
   {
     name: "Electronics",
     img: "https://i.pinimg.com/1200x/0b/f5/7e/0bf57e9b54ee33e7765ebd8bebb7b407.jpg",
+    price: 9999,
   },
   {
     name: "Furniture",
     img: "https://i.pinimg.com/1200x/45/f9/83/45f983a60e38b6182b3b42e871e2ee86.jpg",
+    price: 7999,
   },
 ];
 
@@ -34,7 +40,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const goToDetails = (product) => {
-    navigate("/details", { state: product });
+    navigate("/details", { state: { product } });
   };
 
   return (
@@ -56,11 +62,16 @@ const Home = () => {
           <motion.div
             whileHover={{ scale: 1.1 }}
             key={i}
-            className="flex flex-col items-center min-w-[90px] cursor-pointer"
+            className="flex flex-col items-center min-w-[100px] cursor-pointer"
             onClick={() => goToDetails(cat)}
           >
             <img src={cat.img} alt={cat.name} className="w-16 h-16" />
             <p className="text-sm font-medium mt-2">{cat.name}</p>
+
+            {/* ✅ PRICE ADDED HERE */}
+            <p className="text-indigo-600 font-bold text-sm mt-1">
+              ₹{cat.price}
+            </p>
           </motion.div>
         ))}
       </div>
