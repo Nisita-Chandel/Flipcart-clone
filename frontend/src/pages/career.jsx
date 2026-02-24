@@ -33,8 +33,7 @@ const Career = () => {
       
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20 text-center px-6">
-        <h1 className="text-4x
-        l md:text-5xl font-bold mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
           Join Our Team 🚀
         </h1>
         <p className="max-w-2xl mx-auto text-lg opacity-90">
