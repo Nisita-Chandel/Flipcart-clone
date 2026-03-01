@@ -10,6 +10,7 @@ import Career from "../pages/Career";
 import Contact from "../pages/Contact";
 import Shipping from "../pages/Shipping";
 import Security from "../pages/Security";
+import Payment from "../pages/Payment";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -24,6 +25,7 @@ const AppRoutes = () => {
       <Route path="/contact" element={<Contact/>}/>
       <Route path="/shipping" element={<Shipping/>}/>
       <Route path="/security" element={<Security/>}/>
+      <Route path="/payments" element={<Payment/>}/>
     </Routes>
   );
 };
