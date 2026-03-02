@@ -3,6 +3,17 @@ import { FaCreditCard, FaMobileAlt, FaMoneyBillWave } from "react-icons/fa";
 
 const Payment = () => {
   const [method, setMethod] = useState("card");
+  const [success, setSuccess] = useState(false);
+
+  const handlePayment = () => {
+    // You can add validation here later
+    setSuccess(true);
+
+    // Optional: Hide success message after 3 seconds
+    setTimeout(() => {
+      setSuccess(false);
+    }, 3000);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-10 px-6">
@@ -97,9 +108,19 @@ const Payment = () => {
           )}
 
           {/* Pay Button */}
-          <button className="w-full mt-8 bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition">
+          <button
+            onClick={handlePayment}
+            className="w-full mt-8 bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition"
+          >
             Pay Now
           </button>
+
+          {/* Success Message */}
+          {success && (
+            <div className="mt-6 p-4 bg-green-100 text-green-700 rounded-lg text-center font-semibold">
+              ✅ Payment Successful! Thank you for your order.
+            </div>
+          )}
         </div>
 
         {/* Order Summary */}
