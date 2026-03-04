@@ -92,11 +92,11 @@ const Home = () => {
           Up to 70% OFF on Fashion, Electronics & More
         </p>
         <button
-          onClick={() => window.scrollTo({ top: 600, behavior: "smooth" })}
-          className="mt-6 bg-white text-indigo-600 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition"
-        >
-          Shop Now
-        </button>
+  onClick={() => navigate("/shipping")}
+  className="mt-6 bg-white text-indigo-600 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition"
+>
+  Shop Now
+</button>
       </div>
 
       {/* ---------------- PRODUCTS SECTION ---------------- */}
