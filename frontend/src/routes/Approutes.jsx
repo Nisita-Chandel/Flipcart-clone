@@ -12,6 +12,7 @@ import Shipping from "../pages/Shipping";
 import Security from "../pages/Security";
 import Payment from "../pages/Payment";
 import Returns from "../pages/Returns";
+import Faq from "../pages/Faq";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -28,6 +29,7 @@ const AppRoutes = () => {
       <Route path="/security" element={<Security/>}/>
       <Route path="/payments" element={<Payment/>}/>
       <Route path="/returns" element={<Returns/>}/>
+      <Route path="/faq" element={<Faq/>}/>
     </Routes>
   );
 };
