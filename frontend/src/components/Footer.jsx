@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaFacebook,
   FaInstagram,
@@ -11,6 +11,8 @@ import {
 } from "react-icons/fa";
 
 const Footer = () => {
+  const navigate = useNavigate(); // navigation hook
+
   return (
     <footer className="bg-[#172337] text-gray-300 pt-12 mt-16">
 
@@ -88,7 +90,10 @@ const Footer = () => {
               placeholder="Your email"
               className="px-3 py-2 rounded-l-md text-black w-full"
             />
-            <button className="bg-indigo-600 px-4 py-2 rounded-r-md hover:bg-indigo-700 transition text-white">
+            <button
+              onClick={() => navigate("/")}   // navigate to home
+              className="bg-indigo-600 px-4 py-2 rounded-r-md hover:bg-indigo-700 transition text-white"
+            >
               Go
             </button>
           </div>
