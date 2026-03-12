@@ -88,15 +88,17 @@ const Home = () => {
         >
           Big Billion Days Sale 🎉
         </motion.h2>
+
         <p className="mt-4 text-lg">
           Up to 70% OFF on Fashion, Electronics & More
         </p>
+
         <button
-  onClick={() => navigate("/shipping")}
-  className="mt-6 bg-white text-indigo-600 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition"
->
-  Shop Now
-</button>
+          onClick={() => navigate("/shipping")}
+          className="mt-6 bg-white text-indigo-600 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition"
+        >
+          Shop Now
+        </button>
       </div>
 
       {/* ---------------- PRODUCTS SECTION ---------------- */}
@@ -113,18 +115,32 @@ const Home = () => {
               className="bg-white p-4 rounded-2xl shadow-md hover:shadow-xl transition cursor-pointer relative"
               onClick={() => goToDetails(product)}
             >
-              <FaHeart className="absolute top-4 right-4 text-gray-400 hover:text-red-500" />
+
+              {/* HEART ICON */}
+              <FaHeart
+                className="absolute top-4 right-4 text-gray-400 hover:text-red-500 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation(); // prevents opening details page
+                  navigate("/favorite"); // navigate to favorite page
+                }}
+              />
+
               <img
                 src={product.img}
                 className="h-40 w-full object-contain mb-4"
+                alt={product.title}
               />
+
               <h3 className="font-semibold text-sm">{product.title}</h3>
+
               <p className="text-indigo-600 font-bold mt-1">
                 ₹{product.price}
               </p>
+
               <button className="mt-3 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
                 Add to Cart
               </button>
+
             </motion.div>
           ))}
         </div>
@@ -135,20 +151,20 @@ const Home = () => {
         <h2 className="text-2xl font-bold mb-4">
           Subscribe for Exclusive Offers 💌
         </h2>
+
         <div className="flex justify-center">
           <input
             type="email"
             placeholder="Enter your email"
             className="px-4 py-2 rounded-l-lg text-black w-64"
           />
+
           <button className="bg-purple-700 px-6 py-2 rounded-r-lg hover:bg-purple-800 transition">
             Subscribe
           </button>
         </div>
       </div>
 
-      {/* ---------------- FOOTER ---------------- */}
-      
     </div>
   );
 };
