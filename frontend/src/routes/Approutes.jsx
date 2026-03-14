@@ -14,6 +14,7 @@ import Payment from "../pages/Payment";
 import Returns from "../pages/Returns";
 import Faq from "../pages/Faq";
 import Favorite from "../pages/favorite";
+import Ladies from "../pages/ladies";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -32,6 +33,7 @@ const AppRoutes = () => {
       <Route path="/returns" element={<Returns/>}/>
       <Route path="/faq" element={<Faq/>}/>
       <Route path="/favorite" element={<Favorite/>}/>
+      <Route path="/ladies" element={<Ladies/>}/>
     </Routes>
   );
 };

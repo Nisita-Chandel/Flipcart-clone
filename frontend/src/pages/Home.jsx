@@ -38,8 +38,13 @@ const Home = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
+  // 🔹 Only this function updated
   const goToDetails = (product) => {
-    navigate("/details", { state: product });
+    if (product.id === 1) {
+      navigate("/ladies");   // go to ladies page
+    } else {
+      navigate("/details", { state: product });
+    }
   };
 
   const filteredProducts = products.filter((p) =>
@@ -159,37 +164,35 @@ const Home = () => {
       </div>
 
       {/* NEWSLETTER */}
-     
-      {/* NEWSLETTER */}
-<div className="py-20 px-6 bg-gray-50">
+      <div className="py-20 px-6 bg-gray-50">
 
-<div className="max-w-4xl mx-auto bg-white shadow-xl rounded-3xl p-10 text-center">
+        <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-3xl p-10 text-center">
 
-  <h2 className="text-3xl font-bold text-gray-800 mb-3">
-    Subscribe for Exclusive Offers 💌
-  </h2>
+          <h2 className="text-3xl font-bold text-gray-800 mb-3">
+            Subscribe for Exclusive Offers 💌
+          </h2>
 
-  <p className="text-gray-500 mb-8">
-    Get updates about our latest deals, new arrivals and discounts
-  </p>
+          <p className="text-gray-500 mb-8">
+            Get updates about our latest deals, new arrivals and discounts
+          </p>
 
-  <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
 
-    <input
-      type="email"
-      placeholder="Enter your email"
-      className="px-5 py-3 rounded-xl border border-gray-300 w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-    />
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="px-5 py-3 rounded-xl border border-gray-300 w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
 
-    <button className="bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition shadow-md">
-      Subscribe
-    </button>
+            <button className="bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition shadow-md">
+              Subscribe
+            </button>
 
-  </div>
+          </div>
 
-</div>
+        </div>
 
-</div>
+      </div>
 
     </div>
   );
