@@ -15,6 +15,9 @@ import Returns from "../pages/Returns";
 import Faq from "../pages/Faq";
 import Favorite from "../pages/favorite";
 import Ladies from "../pages/ladies";
+import Furniture from "../pages/furniture";
+import Electronics from "../pages/Electronics";
+import Beauty from "../pages/Beauty";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -34,6 +37,9 @@ const AppRoutes = () => {
       <Route path="/faq" element={<Faq/>}/>
       <Route path="/favorite" element={<Favorite/>}/>
       <Route path="/ladies" element={<Ladies/>}/>
+      <Route path="/furniture" element={<Furniture/>}/>
+      <Route path="/electronics" element={<Electronics/>}/>
+      <Route path="/beauty" element={<Beauty/>}/>
     </Routes>
   );
 };

@@ -29,7 +29,7 @@ const products = [
     id: 4,
     title: "Beauty Kit",
     price: 999,
-    img: "https://i.pinimg.com/1200x/6e/a8/05/6ea8053b16e93ef94a6c823bb38c6a7d.jpg",
+    img: "https://i.pinimg.com/736x/96/a5/17/96a5177c29eb65c1485b653d635257ad.jpg",
     category: "Beauty",
   },
 ];
@@ -38,13 +38,25 @@ const Home = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  // 🔹 Only this function updated
+  // 🔹 UPDATED NAVIGATION FUNCTION
   const goToDetails = (product) => {
+
     if (product.id === 1) {
-      navigate("/ladies");   // go to ladies page
-    } else {
+      navigate("/ladies");
+    } 
+    else if (product.id === 2) {
+      navigate("/furniture");   // 👈 navigate to furniture page
+    } 
+    else if (product.id === 3) {
+      navigate("/electronics");
+    }
+    else if (product.id === 4) {
+      navigate("/beauty");
+    }
+    else {
       navigate("/details", { state: product });
     }
+
   };
 
   const filteredProducts = products.filter((p) =>
@@ -158,37 +170,6 @@ const Home = () => {
             </motion.div>
 
           ))}
-
-        </div>
-
-      </div>
-
-      {/* NEWSLETTER */}
-      <div className="py-20 px-6 bg-gray-50">
-
-        <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-3xl p-10 text-center">
-
-          <h2 className="text-3xl font-bold text-gray-800 mb-3">
-            Subscribe for Exclusive Offers 💌
-          </h2>
-
-          <p className="text-gray-500 mb-8">
-            Get updates about our latest deals, new arrivals and discounts
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="px-5 py-3 rounded-xl border border-gray-300 w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            />
-
-            <button className="bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition shadow-md">
-              Subscribe
-            </button>
-
-          </div>
 
         </div>
 
