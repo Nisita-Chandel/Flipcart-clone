@@ -1,50 +1,29 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 const Cart = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-
-  // Get product safely
-  const product = location.state?.product;
-
   const [cartItems, setCartItems] = useState([]);
 
-  // ✅ Add product without replacing old ones
+  // ✅ Load cart from localStorage
   useEffect(() => {
-    if (product) {
-      setCartItems((prevItems) => {
-        // Check if product already exists
-        const existingItem = prevItems.find(
-          (item) => item.name === (product.title || product.name)
-        );
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        if (existingItem) {
-          // Increase quantity if already in cart
-          return prevItems.map((item) =>
-            item.name === (product.title || product.name)
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          );
-        } else {
-          // Add new product
-          return [
-            ...prevItems,
-            {
-              id: Date.now(),
-              name: product.title || product.name,
-              price: Number(product.price) || 0,
-              quantity: 1,
-              image: product.img,
-            },
-          ];
-        }
-      });
-    }
-  }, [product]);
+    const formattedCart = storedCart.map((item) => ({
+      id: item.id,
+      name: item.title,
+      price: item.price,
+      quantity: 1,
+      image: item.img,
+    }));
+
+    setCartItems(formattedCart);
+  }, []);
 
   const placeOrder = () => {
     alert("🎉 Order Placed Successfully!");
+
+    localStorage.removeItem("cart"); // clear storage
     setCartItems([]);
 
     setTimeout(() => {
@@ -73,7 +52,19 @@ const Cart = () => {
   };
 
   const removeItem = (id) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
+    const updatedCart = cartItems.filter((item) => item.id !== id);
+
+    setCartItems(updatedCart);
+
+    // update localStorage
+    const storageCart = updatedCart.map((item) => ({
+      id: item.id,
+      title: item.name,
+      price: item.price,
+      img: item.image,
+    }));
+
+    localStorage.setItem("cart", JSON.stringify(storageCart));
   };
 
   const totalPrice = cartItems.reduce(
@@ -97,6 +88,7 @@ const Cart = () => {
         </div>
       ) : (
         <div className="grid lg:grid-cols-3 gap-8">
+
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-6">
             {cartItems.map((item) => (
@@ -176,6 +168,7 @@ const Cart = () => {
               Place Order
             </button>
           </div>
+
         </div>
       )}
     </div>
