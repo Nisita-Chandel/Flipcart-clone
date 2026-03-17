@@ -20,24 +20,32 @@ const Furniture = () => {
       id: 2,
       title: "Wooden Table",
       price: 7999,
-      img: "https://i.pinimg.com/736x/60/70/9f/60709f2f5f8f4a8c67a4c31f5b9c72fd.jpg",
+      img: "https://i.pinimg.com/1200x/69/47/98/6947987f1e5b8a683a97b93541107089.jpg",
     },
     {
       id: 3,
       title: "Luxury Sofa",
       price: 14999,
-      img: "https://i.pinimg.com/736x/1a/55/6d/1a556dffbe09c2dbbc9f6d4c0f6f2d61.jpg",
+      img: "https://i.pinimg.com/736x/48/bd/b3/48bdb3d380213d6623f027879b9d9a5b.jpg",
+    },
+    {
+      id: 4,
+      title: "Premium Bed",
+      price: 19999,
+      img: "https://i.pinimg.com/736x/57/4c/62/574c62701ecb68f06fd831432a13637a.jpg",
     },
   ];
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-6">
 
-      <h1 className="text-4xl font-bold text-center mb-10 text-gray-800">
+      {/* Heading */}
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
         Furniture Collection 🪑
       </h1>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      {/* Grid same as Electronics */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
 
         {products.map((product) => (
           <div

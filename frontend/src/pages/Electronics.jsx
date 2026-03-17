@@ -20,19 +20,19 @@ const Electronics = () => {
       id: 2,
       title: "Smart TV",
       price: 24999,
-      img: "https://i.pinimg.com/736x/8f/2a/35/8f2a352af1fba88c3b11aefc4c1d9c64.jpg",
+      img: "https://i.pinimg.com/1200x/16/99/25/169925e71ddf66880636818841138913.jpg",
     },
     {
       id: 3,
       title: "Headphones",
       price: 2999,
-      img: "https://i.pinimg.com/736x/75/5b/6d/755b6d3bcd1d5e3e2392d6f4858cc5d5.jpg",
+      img: "https://i.pinimg.com/736x/a5/2c/1c/a52c1cb5dbf7bc4e1523f1c7847cb08d.jpg",
     },
     {
       id: 4,
       title: "Laptop",
       price: 55999,
-      img: "https://i.pinimg.com/736x/5e/2e/46/5e2e46d48b1e59f13b1d3c2a0a0c2c9e.jpg",
+      img: "https://i.pinimg.com/1200x/99/75/01/99750135b74204cbf3187f2d74956ae0.jpg",
     },
   ];
 

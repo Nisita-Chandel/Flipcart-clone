@@ -17,25 +17,25 @@ const Beauty = () => {
       id: 1,
       title: "Makeup Kit",
       price: 999,
-      img: "https://i.pinimg.com/736x/6e/a8/05/6ea8053b16e93ef94a6c823bb38c6a7d.jpg",
+      img: "https://i.pinimg.com/736x/ff/8d/c1/ff8dc1bbb55766ca59cb4bce40880163.jpg",
     },
     {
       id: 2,
       title: "Lipstick",
       price: 499,
-      img: "https://i.pinimg.com/736x/90/92/31/909231d0b3e93d9e4a4c9c6fa0a4e3df.jpg",
+      img: "https://i.pinimg.com/736x/f6/21/d9/f621d9dfce1c066eceb9290f676aca16.jpg",
     },
     {
       id: 3,
       title: "Perfume",
       price: 1499,
-      img: "https://i.pinimg.com/736x/59/5c/b6/595cb6b9b4a6fbc1fa2d3b2b9c79d93d.jpg",
+      img: "https://i.pinimg.com/736x/18/a6/03/18a60337e45e4d5842c373478e7eb7da.jpg",
     },
     {
       id: 4,
       title: "Skincare Set",
       price: 1299,
-      img: "https://i.pinimg.com/736x/3f/2a/1e/3f2a1e1f9b2f8a9a6d7b1b3d4c8c9f7d.jpg",
+      img: "https://i.pinimg.com/736x/89/63/52/8963524761b32bb9167b43a36d619b7c.jpg",
     },
   ];
 
