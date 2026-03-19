@@ -1,14 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const Beauty = () => {
-
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+  const navigate = useNavigate();
 
+  // Load favorites from localStorage
+  useEffect(() => {
+    const storedFav = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(storedFav);
+  }, []);
+
+  // Add to Cart
   const addToCart = (product) => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.push(product);
     localStorage.setItem("cart", JSON.stringify(cart));
     alert("Product added to cart 🛒");
+  };
+
+  // Toggle Favorite
+  const toggleFavorite = (product) => {
+    let updatedFav;
+
+    const exists = favorites.find((item) => item.id === product.id);
+
+    if (exists) {
+      updatedFav = favorites.filter((item) => item.id !== product.id);
+    } else {
+      updatedFav = [...favorites, product];
+    }
+
+    setFavorites(updatedFav);
+    localStorage.setItem("favorites", JSON.stringify(updatedFav));
+
+    // Navigate to favorite page
+    navigate("/favorite");
+  };
+
+  const isFavorite = (id) => {
+    return favorites.some((item) => item.id === id);
   };
 
   const products = [
@@ -44,21 +77,30 @@ const Beauty = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-6">
-
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
         Beauty Collection 💄
       </h1>
 
       {/* Product Grid */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition"
+            className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition relative"
           >
+            {/* ❤️ Favorite Icon */}
+            <div
+              className="absolute top-3 right-3 text-xl cursor-pointer"
+              onClick={() => toggleFavorite(product)}
+            >
+              {isFavorite(product.id) ? (
+                <FaHeart className="text-red-500" />
+              ) : (
+                <FaRegHeart className="text-gray-500" />
+              )}
+            </div>
 
-            {/* CLICK IMAGE */}
+            {/* Product Image */}
             <img
               src={product.img}
               alt={product.title}
@@ -78,19 +120,15 @@ const Beauty = () => {
             >
               Add to Cart
             </button>
-
           </div>
         ))}
-
       </div>
 
       {/* MODAL */}
       {selectedProduct && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-
           <div className="bg-white p-6 rounded-2xl w-[90%] md:w-[500px] relative">
-
-            {/* Close Button */}
+            
             <button
               onClick={() => setSelectedProduct(null)}
               className="absolute top-3 right-3 text-xl text-gray-600"
@@ -122,11 +160,9 @@ const Beauty = () => {
             >
               Add to Cart 🛒
             </button>
-
           </div>
         </div>
       )}
-
     </div>
   );
 };
