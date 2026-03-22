@@ -1,9 +1,16 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-
+import React, { useState ,useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import {FaHeart,FaRegHeart} from "react-icons/fa";
 const Ladies = () => {
 
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [favorites,setFavorites] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedFav = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(storedFav);
+  },[]);
 
   const addToCart = (product) => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -11,8 +18,29 @@ const Ladies = () => {
     localStorage.setItem("cart", JSON.stringify(cart));
     alert("Product added to cart 🛒");
   };
+  const toggleFavorite = (product) => {
+    let updatedFav;
 
-  const ladiesProducts = [
+    const exists = favorites.find((item) => item.id === product.id);
+
+    if (exists) {
+      updatedFav = favorites.filter((item) => item.id !== product.id);
+    } else {
+      updatedFav = [...favorites, product];
+    }
+
+    setFavorites(updatedFav);
+    localStorage.setItem("favorites", JSON.stringify(updatedFav));
+
+    // Navigate to favorite page
+    navigate("/favorite");
+  };
+
+  const isFavorite = (id) => {
+    return favorites.some((item) => item.id === id);
+  };
+
+  const products = [
     {
       id: 1,
       title: "Women Jacket",
@@ -53,12 +81,23 @@ const Ladies = () => {
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 max-w-7xl mx-auto">
 
-        {ladiesProducts.map((product) => (
-          <motion.div
+      {products.map((product) => (
+          <div
             key={product.id}
-            whileHover={{ y: -10 }}
-            className="bg-white p-5 rounded-2xl shadow-md hover:shadow-xl transition text-center"
+            className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition relative"
           >
+
+             {/* ❤️ Favorite Icon */}
+             <div
+              className="absolute top-3 right-3 text-xl cursor-pointer"
+              onClick={() => toggleFavorite(product)}
+            >
+              {isFavorite(product.id) ? (
+                <FaHeart className="text-red-500" />
+              ) : (
+                <FaRegHeart className="text-gray-500" />
+              )}
+            </div>
 
             {/* CLICK IMAGE */}
             <img
@@ -81,7 +120,7 @@ const Ladies = () => {
               Add to Cart
             </button>
 
-          </motion.div>
+          </div>
         ))}
 
       </div>
