@@ -1,25 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaHeart, FaTrash } from "react-icons/fa";
 
 const Favorite = () => {
 
-  const [favorites, setFavorites] = useState([
-    {
-      id: 1,
-      title: "Stylish Jacket",
-      price: "₹1999",
-      img: "https://i.pinimg.com/736x/c0/9d/b0/c09db0c8b60d8c6a63c28b33d7c5edda.jpg",
-    },
-    {
-      id: 2,
-      title: "Running Shoes",
-      price: "₹2499",
-      img: "https://i.pinimg.com/736x/6b/9c/19/6b9c19f9d3b1a4c2a0c30a7b66a7e2a1.jpg",
-    },
-  ]);
+  const [favorites, setFavorites] = useState([]);
 
+  // ✅ Load favorites from localStorage
+  useEffect(() => {
+    const storedFav = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(storedFav);
+  }, []);
+
+  // ✅ Remove from favorites
   const removeFavorite = (id) => {
-    setFavorites(favorites.filter((item) => item.id !== id));
+    const updatedFav = favorites.filter((item) => item.id !== id);
+    setFavorites(updatedFav);
+    localStorage.setItem("favorites", JSON.stringify(updatedFav));
   };
 
   return (
@@ -50,7 +46,7 @@ const Favorite = () => {
 
               <h2 className="text-lg font-semibold mt-3">{item.title}</h2>
 
-              <p className="text-blue-600 font-bold">{item.price}</p>
+              <p className="text-blue-600 font-bold">₹{item.price}</p>
 
               <button
                 onClick={() => removeFavorite(item.id)}
