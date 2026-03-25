@@ -36,7 +36,6 @@ const Furniture = () => {
     setFavorites(updatedFav);
     localStorage.setItem("favorites", JSON.stringify(updatedFav));
 
-    // Navigate to favorite page
     navigate("/favorite");
   };
 
@@ -78,7 +77,16 @@ const Furniture = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-6">
-      
+
+      {/* ✅ Banner Image (Landscape) */}
+      <div className="w-full h-[250px] md:h-[350px] overflow-hidden rounded-xl mb-8">
+        <img
+          src="https://t3.ftcdn.net/jpg/05/50/25/16/360_F_550251605_51GQTTf3JKEmubgfSKvI38aEpmWODOzl.jpg"
+          alt="Furniture Banner"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
         Furniture Collection 🪑
       </h1>
