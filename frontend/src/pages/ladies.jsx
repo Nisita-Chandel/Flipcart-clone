@@ -1,6 +1,7 @@
 import React, { useState ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import {FaHeart,FaRegHeart} from "react-icons/fa";
+
 const Ladies = () => {
 
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -18,6 +19,7 @@ const Ladies = () => {
     localStorage.setItem("cart", JSON.stringify(cart));
     alert("Product added to cart 🛒");
   };
+
   const toggleFavorite = (product) => {
     let updatedFav;
 
@@ -32,7 +34,6 @@ const Ladies = () => {
     setFavorites(updatedFav);
     localStorage.setItem("favorites", JSON.stringify(updatedFav));
 
-    // Navigate to favorite page
     navigate("/favorite");
   };
 
@@ -74,6 +75,15 @@ const Ladies = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-100 px-8 py-16">
 
+      {/* ✅ Banner Image Added */}
+      <div className="w-full h-[250px] md:h-[350px] overflow-hidden rounded-xl mb-10">
+        <img
+          src="https://i.pinimg.com/736x/e1/32/1e/e1321e35ec17e3c4758b57d258677a84.jpg"
+          alt="Ladies Banner"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
       <h1 className="text-4xl font-bold text-center mb-12 text-pink-600">
         👗 Ladies Fashion Collection
       </h1>
@@ -81,14 +91,14 @@ const Ladies = () => {
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 max-w-7xl mx-auto">
 
-      {products.map((product) => (
+        {products.map((product) => (
           <div
             key={product.id}
             className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition relative"
           >
 
-             {/* ❤️ Favorite Icon */}
-             <div
+            {/* ❤️ Favorite */}
+            <div
               className="absolute top-3 right-3 text-xl cursor-pointer"
               onClick={() => toggleFavorite(product)}
             >
@@ -99,7 +109,6 @@ const Ladies = () => {
               )}
             </div>
 
-            {/* CLICK IMAGE */}
             <img
               src={product.img}
               alt={product.title}
@@ -131,7 +140,6 @@ const Ladies = () => {
 
           <div className="bg-white p-6 rounded-2xl w-[90%] md:w-[500px] relative">
 
-            {/* Close Button */}
             <button
               onClick={() => setSelectedProduct(null)}
               className="absolute top-3 right-3 text-gray-600 text-xl"
