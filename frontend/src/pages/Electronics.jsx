@@ -21,7 +21,7 @@ const Electronics = () => {
     alert("Product added to cart 🛒");
   };
 
-  // ✅ Toggle Favorite (same as Beauty)
+  // ✅ Toggle Favorite
   const toggleFavorite = (product) => {
     let updatedFav;
 
@@ -31,7 +31,7 @@ const Electronics = () => {
       updatedFav = favorites.filter((item) => item.id !== product.id);
     } else {
       updatedFav = [...favorites, product];
-      navigate("/favorite"); // only when adding
+      navigate("/favorite");
     }
 
     setFavorites(updatedFav);
@@ -76,7 +76,16 @@ const Electronics = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-6">
-      
+
+      {/* ✅ NEW Banner Added */}
+      <div className="w-full h-[250px] md:h-[350px] overflow-hidden rounded-xl mb-10">
+        <img
+          src="https://www.shutterstock.com/image-vector/vector-illustration-realistic-silver-color-260nw-2199658821.jpg"
+          alt="Electronics Banner"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
         Electronics Collection ⚡
       </h1>
