@@ -78,13 +78,14 @@ const Beauty = () => {
     <div className="min-h-screen bg-gray-100">
 
       {/* 🔥 Banner Section */}
-      <div className="w-full h-[250px] md:h-[350px] overflow-hidden">
-        <img
-          src="https://i.pinimg.com/736x/98/d1/aa/98d1aa6cee69fd8734b4f158155c3c21.jpg"
-          alt="Beauty Banner"
-          className="w-full h-full object-cover"
-        />
-      </div>
+      {/* 🔥 Banner Section (FULL IMAGE FIXED) */}
+<div className="w-full bg-gray-200 flex justify-center items-center py-4">
+  <img
+    src="https://i.pinimg.com/1200x/24/51/27/2451277bfcba967b2af87eeefa438d19.jpg"
+    alt="Beauty Banner"
+    className="w-[2000px] max-h-[500px] object-contain"
+  />
+</div>
 
       <div className="py-12 px-6">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
