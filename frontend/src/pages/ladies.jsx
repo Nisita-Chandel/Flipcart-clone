@@ -76,13 +76,13 @@ const Ladies = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-100 px-8 py-16">
 
       {/* ✅ Banner Image Added */}
-      <div className="w-full h-[250px] md:h-[350px] overflow-hidden rounded-xl mb-10">
-        <img
-          src="https://i.pinimg.com/736x/e1/32/1e/e1321e35ec17e3c4758b57d258677a84.jpg"
-          alt="Ladies Banner"
-          className="w-full h-full object-cover"
-        />
-      </div>
+      <div className="w-full h-[900px] md:h-[500px] overflow-hidden rounded-xl mb-10">
+  <img
+    src="https://i.pinimg.com/1200x/4c/fc/d1/4cfcd13a3a7ea283e49096b3cbbcfe09.jpg"
+    alt="Ladies Banner"
+    className="w-full h-full object-cover"
+  />
+</div>
 
       <h1 className="text-4xl font-bold text-center mb-12 text-pink-600">
         👗 Ladies Fashion Collection
