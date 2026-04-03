@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaShoppingCart } from "react-icons/fa";
 
 const Furniture = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -13,33 +13,28 @@ const Furniture = () => {
     setFavorites(storedFav);
   }, []);
 
-  // Add to Cart
   const addToCart = (product) => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push(product);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Product added to cart 🛒");
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const updatedCart = [...cart, product];
+  
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  
+    // ✅ Navigate to cart page
+    navigate("/cart");
   };
 
   // Toggle Favorite
   const toggleFavorite = (product) => {
-    let updatedFav;
+    const exists = favorites.some((item) => item.id === product.id);
 
-    const exists = favorites.find((item) => item.id === product.id);
-
-    if (exists) {
-      updatedFav = favorites.filter((item) => item.id !== product.id);
-    } else {
-      updatedFav = [...favorites, product];
-    }
+    const updatedFav = exists
+      ? favorites.filter((item) => item.id !== product.id)
+      : [...favorites, product];
 
     setFavorites(updatedFav);
     localStorage.setItem("favorites", JSON.stringify(updatedFav));
-
-    navigate("/favorite");
   };
 
-  // Check favorite
   const isFavorite = (id) => {
     return favorites.some((item) => item.id === id);
   };
@@ -76,39 +71,39 @@ const Furniture = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-6">
-
-      {/* ✅ Banner Image (Landscape) */}
-      <div className="w-full h-[250px] md:h-[350px] overflow-hidden rounded-xl mb-8">
+    <div className="min-h-400 bg-gradient-to-br from-gray-100 to-gray-200 py-10 px-4">
+ <h1 className="text-2xl md:text-4xl font-bold text-center text-gray-800 mb-12">
+         Premium Furniture Collection
+      </h1>
+      {/* 🔥 Banner */}
+      <div className="w-full h-[380px] md:h-[400px] overflow-hidden rounded-2xl mb-10 shadow-lg">
         <img
-          src="https://t3.ftcdn.net/jpg/05/50/25/16/360_F_550251605_51GQTTf3JKEmubgfSKvI38aEpmWODOzl.jpg"
+          src="https://i.pinimg.com/1200x/9e/39/56/9e39568dd08ab62c6d179a77d9cb902f.jpg"
           alt="Furniture Banner"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover hover:scale-105 transition duration-500"
         />
       </div>
 
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
-        Furniture Collection 🪑
-      </h1>
+     
 
       {/* Product Grid */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition relative"
+            className="bg-white p-5 rounded-2xl shadow-md hover:shadow-2xl transition duration-300 relative group"
           >
 
-            {/* ❤️ Favorite Icon */}
+            {/* ❤️ Favorite */}
             <div
-              className="absolute top-3 right-3 text-xl cursor-pointer"
+              className="absolute top-3 right-3 text-xl cursor-pointer z-10"
               onClick={() => toggleFavorite(product)}
             >
               {isFavorite(product.id) ? (
                 <FaHeart className="text-red-500" />
               ) : (
-                <FaRegHeart className="text-gray-500" />
+                <FaRegHeart className="text-gray-400 hover:text-red-500 transition" />
               )}
             </div>
 
@@ -117,36 +112,37 @@ const Furniture = () => {
               src={product.img}
               alt={product.title}
               onClick={() => setSelectedProduct(product)}
-              className="h-40 mx-auto object-contain mb-4 cursor-pointer hover:scale-105 transition"
+              className="h-44 mx-auto object-contain mb-4 cursor-pointer group-hover:scale-110 transition duration-300"
             />
 
-            <h3 className="font-semibold text-lg">{product.title}</h3>
+            <h3 className="font-semibold text-lg text-gray-700">
+              {product.title}
+            </h3>
 
-            <p className="text-indigo-600 font-bold mt-1">
+            <p className="text-indigo-600 font-bold text-lg mt-1">
               ₹{product.price}
             </p>
 
             <button
               onClick={() => addToCart(product)}
-              className="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+              className="mt-4 w-full flex items-center justify-center gap-2 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
             >
-              Add to Cart
+              <FaShoppingCart /> Add to Cart
             </button>
-
           </div>
         ))}
       </div>
 
-      {/* MODAL */}
+      {/* 🔥 MODAL */}
       {selectedProduct && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
 
-          <div className="bg-white p-6 rounded-2xl w-[90%] md:w-[500px] relative">
+          <div className="bg-white p-6 rounded-2xl w-[90%] md:w-[500px] relative shadow-2xl animate-fadeIn">
 
             {/* Close */}
             <button
               onClick={() => setSelectedProduct(null)}
-              className="absolute top-3 right-3 text-xl text-gray-600"
+              className="absolute top-3 right-3 text-xl text-gray-600 hover:text-black"
             >
               ✖
             </button>
@@ -157,7 +153,7 @@ const Furniture = () => {
               className="w-full h-60 object-contain mb-4"
             />
 
-            <h2 className="text-2xl font-bold">
+            <h2 className="text-2xl font-bold text-gray-800">
               {selectedProduct.title}
             </h2>
 
@@ -171,15 +167,13 @@ const Furniture = () => {
 
             <button
               onClick={() => addToCart(selectedProduct)}
-              className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"
+              className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
             >
               Add to Cart 🛒
             </button>
-
           </div>
         </div>
       )}
-
     </div>
   );
 };

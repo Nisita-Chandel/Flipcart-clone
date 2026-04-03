@@ -72,6 +72,9 @@ const Ladies = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-purple-100 px-6 py-12">
 
       {/* 🔥 Banner */}
+      <h1 className="text-center mb-4 text-pink-700 text-xl md:text-4xl font-bold tracking-wide">
+            Ladies Collection ✨
+          </h1>
       <div className="w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden mb-12 shadow-xl relative">
         <img
           src="https://i.pinimg.com/1200x/4c/fc/d1/4cfcd13a3a7ea283e49096b3cbbcfe09.jpg"
@@ -79,9 +82,7 @@ const Ladies = () => {
           className="w-full h-full object-cover scale-105 hover:scale-110 transition duration-700"
         />
         <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-          <h1 className="text-white text-4xl md:text-6xl font-bold tracking-wide">
-            Ladies Collection ✨
-          </h1>
+          
         </div>
       </div>
 
