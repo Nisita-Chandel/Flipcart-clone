@@ -1,30 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaShoppingCart } from "react-icons/fa";
 
 const Electronics = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
 
-  // ✅ Load favorites
   useEffect(() => {
     const storedFav = JSON.parse(localStorage.getItem("favorites")) || [];
     setFavorites(storedFav);
   }, []);
 
-  // ✅ Add to Cart
   const addToCart = (product) => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.push(product);
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Product added to cart 🛒");
+    navigate("/cart"); // ✅ Redirect to cart page
   };
 
-  // ✅ Toggle Favorite
   const toggleFavorite = (product) => {
     let updatedFav;
-
     const exists = favorites.find((item) => item.id === product.id);
 
     if (exists) {
@@ -38,7 +34,6 @@ const Electronics = () => {
     localStorage.setItem("favorites", JSON.stringify(updatedFav));
   };
 
-  // ✅ Check favorite
   const isFavorite = (id) => {
     return favorites.some((item) => item.id === id);
   };
@@ -75,33 +70,38 @@ const Electronics = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 py-10 px-4">
 
-      {/* ✅ NEW Banner Added */}
-      <div className="w-full h-[250px] md:h-[350px] overflow-hidden rounded-xl mb-10">
+      {/* 🔥 Banner */}
+      <div className="relative w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden mb-12 shadow-lg">
         <img
-          src="https://www.shutterstock.com/image-vector/vector-illustration-realistic-silver-color-260nw-2199658821.jpg"
+          src="https://t3.ftcdn.net/jpg/11/80/90/06/360_F_1180900664_EGOErJLzFqvqBovmkMRGCTxO5hiFnZPX.jpg"
           alt="Electronics Banner"
           className="w-full h-full object-cover"
         />
+        <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-white">
+          <h1 className="text-4xl md:text-5xl font-bold">Electronics Store ⚡</h1>
+          <p className="mt-2 text-lg">Latest gadgets at best prices</p>
+        </div>
       </div>
 
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
-        Electronics Collection ⚡
-      </h1>
+      {/* Title */}
+      <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
+        Trending Electronics 🔥
+      </h2>
 
-      {/* Product Grid */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        
+      {/* Products */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition relative"
+            className="bg-white/80 backdrop-blur-lg p-5 rounded-2xl shadow-md hover:shadow-2xl transition duration-300 relative group"
           >
 
-            {/* ❤️ Favorite Icon */}
+            {/* ❤️ Favorite */}
             <div
-              className="absolute top-3 right-3 text-xl cursor-pointer"
+              className="absolute top-3 right-3 text-xl cursor-pointer transition transform hover:scale-125"
               onClick={() => toggleFavorite(product)}
             >
               {isFavorite(product.id) ? (
@@ -116,20 +116,21 @@ const Electronics = () => {
               src={product.img}
               alt={product.title}
               onClick={() => setSelectedProduct(product)}
-              className="h-40 mx-auto object-contain mb-4 cursor-pointer hover:scale-105 transition"
+              className="h-40 mx-auto object-contain mb-4 cursor-pointer group-hover:scale-110 transition duration-300"
             />
 
             <h3 className="font-semibold text-lg">{product.title}</h3>
 
-            <p className="text-indigo-600 font-bold mt-1">
+            <p className="text-indigo-600 font-bold mt-1 text-lg">
               ₹{product.price}
             </p>
 
+            {/* Button */}
             <button
               onClick={() => addToCart(product)}
-              className="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+              className="mt-4 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 rounded-lg hover:scale-105 transition"
             >
-              Add to Cart
+              <FaShoppingCart /> Add to Cart
             </button>
 
           </div>
@@ -137,15 +138,15 @@ const Electronics = () => {
 
       </div>
 
-      {/* MODAL */}
+      {/* 🔥 MODAL */}
       {selectedProduct && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
 
-          <div className="bg-white p-6 rounded-2xl w-[90%] md:w-[500px] relative">
+          <div className="bg-white p-6 rounded-3xl w-[90%] md:w-[500px] relative shadow-2xl animate-fadeIn">
 
             <button
               onClick={() => setSelectedProduct(null)}
-              className="absolute top-3 right-3 text-xl text-gray-600"
+              className="absolute top-3 right-3 text-xl"
             >
               ✖
             </button>
@@ -156,9 +157,7 @@ const Electronics = () => {
               className="w-full h-60 object-contain mb-4"
             />
 
-            <h2 className="text-2xl font-bold">
-              {selectedProduct.title}
-            </h2>
+            <h2 className="text-2xl font-bold">{selectedProduct.title}</h2>
 
             <p className="text-gray-600 mt-2">
               {selectedProduct.description}
@@ -170,7 +169,7 @@ const Electronics = () => {
 
             <button
               onClick={() => addToCart(selectedProduct)}
-              className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"
+              className="mt-4 w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 rounded-lg hover:scale-105 transition"
             >
               Add to Cart 🛒
             </button>
