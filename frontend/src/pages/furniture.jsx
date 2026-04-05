@@ -7,7 +7,6 @@ const Furniture = () => {
   const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
 
-  // Load favorites
   useEffect(() => {
     const storedFav = JSON.parse(localStorage.getItem("favorites")) || [];
     setFavorites(storedFav);
@@ -16,14 +15,10 @@ const Furniture = () => {
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const updatedCart = [...cart, product];
-  
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-  
-    // ✅ Navigate to cart page
     navigate("/cart");
   };
 
-  // Toggle Favorite
   const toggleFavorite = (product) => {
     const exists = favorites.some((item) => item.id === product.id);
 
@@ -71,11 +66,13 @@ const Furniture = () => {
   ];
 
   return (
-    <div className="min-h-400 bg-gradient-to-br from-gray-100 to-gray-200 py-10 px-4">
- <h1 className="text-2xl md:text-4xl font-bold text-center text-gray-800 mb-12">
-         Premium Furniture Collection
+    <div className="bg-gradient-to-br from-gray-100 to-gray-200 pt-10 pb-4 px-4">
+      
+      <h1 className="text-2xl md:text-4xl font-bold text-center text-gray-800 mb-12">
+        Premium Furniture Collection
       </h1>
-      {/* 🔥 Banner */}
+
+      {/* Banner */}
       <div className="w-full h-[380px] md:h-[400px] overflow-hidden rounded-2xl mb-10 shadow-lg">
         <img
           src="https://i.pinimg.com/1200x/9e/39/56/9e39568dd08ab62c6d179a77d9cb902f.jpg"
@@ -84,18 +81,14 @@ const Furniture = () => {
         />
       </div>
 
-     
-
       {/* Product Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-
         {products.map((product) => (
           <div
             key={product.id}
             className="bg-white p-5 rounded-2xl shadow-md hover:shadow-2xl transition duration-300 relative group"
           >
-
-            {/* ❤️ Favorite */}
+            {/* Favorite */}
             <div
               className="absolute top-3 right-3 text-xl cursor-pointer z-10"
               onClick={() => toggleFavorite(product)}
@@ -133,13 +126,10 @@ const Furniture = () => {
         ))}
       </div>
 
-      {/* 🔥 MODAL */}
+      {/* Modal */}
       {selectedProduct && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-
-          <div className="bg-white p-6 rounded-2xl w-[90%] md:w-[500px] relative shadow-2xl animate-fadeIn">
-
-            {/* Close */}
+          <div className="bg-white p-6 rounded-2xl w-[90%] md:w-[500px] relative shadow-2xl">
             <button
               onClick={() => setSelectedProduct(null)}
               className="absolute top-3 right-3 text-xl text-gray-600 hover:text-black"

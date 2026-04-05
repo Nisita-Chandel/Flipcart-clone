@@ -7,13 +7,11 @@ const Beauty = () => {
   const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
 
-  // Load favorites from localStorage
   useEffect(() => {
     const storedFav = JSON.parse(localStorage.getItem("favorites")) || [];
     setFavorites(storedFav);
   }, []);
 
-  // Add to Cart
   const addToCart = (product) => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.push(product);
@@ -21,10 +19,8 @@ const Beauty = () => {
     alert("Product added to cart 🛒");
   };
 
-  // Toggle Favorite
   const toggleFavorite = (product) => {
     let updatedFav;
-
     const exists = favorites.find((item) => item.id === product.id);
 
     if (exists) {
@@ -35,7 +31,6 @@ const Beauty = () => {
 
     setFavorites(updatedFav);
     localStorage.setItem("favorites", JSON.stringify(updatedFav));
-
     navigate("/favorite");
   };
 
@@ -75,23 +70,23 @@ const Beauty = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
-
-      {/* 🔥 Banner Section */}
-      {/* 🔥 Banner Section (FULL IMAGE FIXED) */}
-<div className="w-full bg-gray-200 flex justify-center items-center py-4">
-  <img
-    src="https://i.pinimg.com/1200x/24/51/27/2451277bfcba967b2af87eeefa438d19.jpg"
-    alt="Beauty Banner"
-    className="w-[2000px] max-h-[500px] object-contain"
-  />
-</div>
-
-      <div className="py-12 px-6">
-        <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
-          Beauty Collection 💄
+    <div className="w-full bg-gray-100">
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-10 mt-10">
+          Beauty Collection 
         </h1>
 
+
+      {/* 🔥 CENTERED BANNER WITH PERFECT HEIGHT */}
+      <div className="w-[90%] md:w-[70%] lg:w-[60%] mx-auto mt-6 h-[400px] md:h-[450px] overflow-hidden rounded-xl shadow-lg">
+        <img
+          src="https://i.pinimg.com/1200x/24/51/27/2451277bfcba967b2af87eeefa438d19.jpg"
+          alt="Beauty Banner"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      <div className="py-12 px-6">
+        
         {/* Product Grid */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {products.map((product) => (
@@ -99,7 +94,6 @@ const Beauty = () => {
               key={product.id}
               className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition relative"
             >
-              {/* ❤️ Favorite Icon */}
               <div
                 className="absolute top-3 right-3 text-xl cursor-pointer"
                 onClick={() => toggleFavorite(product)}
@@ -111,7 +105,6 @@ const Beauty = () => {
                 )}
               </div>
 
-              {/* Product Image */}
               <img
                 src={product.img}
                 alt={product.title}
