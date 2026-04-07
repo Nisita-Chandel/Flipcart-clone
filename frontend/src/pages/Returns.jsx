@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaUndoAlt } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const Returns = () => {
   const [orderId, setOrderId] = useState("");
@@ -13,41 +14,61 @@ const Returns = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-6">
-      <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-8">
-
-        {/* Heading */}
-        <div className="text-center mb-10">
-          <div className="flex justify-center mb-3">
-            <FaUndoAlt className="text-3xl text-indigo-600" />
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 py-16 px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-4xl mx-auto bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl p-10 border border-white/40"
+      >
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-4">
+            <div className="bg-indigo-100 p-4 rounded-full shadow-md">
+              <FaUndoAlt className="text-3xl text-indigo-600" />
+            </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800">
+
+          <h1 className="text-4xl font-extrabold text-gray-800 mb-2">
             Returns & Refunds
           </h1>
-          <p className="text-gray-500 mt-2">
-            You can request a return within 7 days of delivery.
+          <p className="text-gray-500 text-lg">
+            Easily request a return within <span className="font-semibold text-indigo-600">7 days</span> of delivery.
           </p>
         </div>
 
         {/* Steps */}
-        <div className="bg-indigo-50 p-5 rounded-lg mb-8">
-          <h3 className="text-lg font-semibold text-gray-700 mb-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl mb-10 shadow-inner"
+        >
+          <h3 className="text-xl font-semibold text-gray-700 mb-4">
             Return Process
           </h3>
-          <ul className="list-disc pl-5 text-gray-600 space-y-1">
-            <li>Enter your Order ID.</li>
-            <li>Select the reason for return.</li>
-            <li>Submit the return request.</li>
-            <li>Our support team will contact you.</li>
+          <ul className="space-y-2 text-gray-600">
+            {[
+              "Enter your Order ID",
+              "Choose reason for return",
+              "Submit request",
+              "Our team will contact you",
+            ].map((step, index) => (
+              <li key={index} className="flex items-center gap-3">
+                <span className="w-6 h-6 flex items-center justify-center bg-indigo-600 text-white text-sm rounded-full">
+                  {index + 1}
+                </span>
+                {step}
+              </li>
+            ))}
           </ul>
-        </div>
+        </motion.div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-
           {/* Order ID */}
           <div>
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block text-gray-700 font-semibold mb-2">
               Order ID
             </label>
             <input
@@ -56,13 +77,13 @@ const Returns = () => {
               value={orderId}
               onChange={(e) => setOrderId(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
             />
           </div>
 
           {/* Reason */}
           <div>
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block text-gray-700 font-semibold mb-2">
               Reason for Return
             </label>
             <textarea
@@ -70,20 +91,21 @@ const Returns = () => {
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg p-3 h-28 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-xl p-3 h-32 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
             ></textarea>
           </div>
 
           {/* Button */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             type="submit"
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300"
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition"
           >
             Submit Return Request
-          </button>
-
+          </motion.button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };
