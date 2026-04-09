@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import {
   FaFacebook,
   FaInstagram,
@@ -12,6 +13,20 @@ import {
 
 const Footer = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = () => {
+    if (!email) {
+      alert("Please enter your email!");
+      return;
+    }
+
+    // Navigate to subscribe page with email
+    navigate("/subscribe", { state: { email } });
+
+    // Clear input
+    setEmail("");
+  };
 
   return (
     <footer className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-gray-300 pt-14">
@@ -51,7 +66,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* ABOUT */}
+        {/* ABOUT LINKS */}
         <div>
           <h3 className="text-gray-400 mb-4 uppercase text-xs tracking-wider">
             About
@@ -92,11 +107,13 @@ const Footer = () => {
             <input
               type="email"
               placeholder="Your email"
-              className="px-3 py-2 rounded-l-md text-black w-full"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="px-3 py-2 rounded-l-md text-black w-full outline-none"
             />
 
             <button
-              onClick={() => navigate("/")}
+              onClick={handleSubscribe}
               className="bg-indigo-600 px-4 py-2 rounded-r-md hover:bg-indigo-700 transition text-white"
             >
               Go

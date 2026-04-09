@@ -18,6 +18,7 @@ import Ladies from "../pages/ladies";
 import Furniture from "../pages/furniture";
 import Electronics from "../pages/Electronics";
 import Beauty from "../pages/Beauty";
+import Subscribe from "../pages/Subscribe";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -40,6 +41,7 @@ const AppRoutes = () => {
       <Route path="/furniture" element={<Furniture/>}/>
       <Route path="/electronics" element={<Electronics/>}/>
       <Route path="/beauty" element={<Beauty/>}/>
+      <Route path="/subscribe" element={<Subscribe/>}/>
     </Routes>
   );
 };
