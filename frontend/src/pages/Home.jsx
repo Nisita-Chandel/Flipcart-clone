@@ -1,6 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaShoppingCart, FaSearch, FaHeart } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaSearch,
+  FaHeart,
+  FaArrowRight,
+} from "react-icons/fa";
 import { useState } from "react";
 
 const products = [
@@ -34,29 +39,23 @@ const products = [
   },
 ];
 
+const categories = [
+  { name: "Fashion", route: "/ladies" },
+  { name: "Furniture", route: "/furniture" },
+  { name: "Electronics", route: "/electronics" },
+  { name: "Beauty", route: "/beauty" },
+];
+
 const Home = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  // 🔹 UPDATED NAVIGATION FUNCTION
   const goToDetails = (product) => {
-
-    if (product.id === 1) {
-      navigate("/ladies");
-    } 
-    else if (product.id === 2) {
-      navigate("/furniture");   // 👈 navigate to furniture page
-    } 
-    else if (product.id === 3) {
-      navigate("/electronics");
-    }
-    else if (product.id === 4) {
-      navigate("/beauty");
-    }
-    else {
-      navigate("/details", { state: product });
-    }
-
+    if (product.id === 1) navigate("/ladies");
+    else if (product.id === 2) navigate("/furniture");
+    else if (product.id === 3) navigate("/electronics");
+    else if (product.id === 4) navigate("/beauty");
+    else navigate("/details", { state: product });
   };
 
   const filteredProducts = products.filter((p) =>
@@ -68,7 +67,6 @@ const Home = () => {
 
       {/* NAVBAR */}
       <div className="backdrop-blur-md bg-white/70 shadow-md px-8 py-4 flex justify-between items-center sticky top-0 z-50">
-
         <h1
           onClick={() => navigate("/")}
           className="text-2xl font-bold text-indigo-600 cursor-pointer hover:scale-105 transition"
@@ -77,7 +75,6 @@ const Home = () => {
         </h1>
 
         <div className="flex items-center gap-5">
-
           <div className="flex items-center bg-gray-100 px-4 py-2 rounded-xl shadow-sm">
             <FaSearch className="text-gray-400 mr-2" />
             <input
@@ -89,60 +86,77 @@ const Home = () => {
             />
           </div>
 
-          <div className="relative cursor-pointer hover:scale-110 transition">
+          <div
+            onClick={() => navigate("/cart")}
+            className="relative cursor-pointer hover:scale-110 transition"
+          >
             <FaShoppingCart size={22} className="text-indigo-600" />
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
               2
             </span>
           </div>
-
         </div>
       </div>
 
-      {/* HERO */}
-      <div className="text-center py-24 px-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white">
+      {/* HERO SECTION */}
+      <div className="text-center py-28 px-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white relative overflow-hidden">
 
         <motion.h2
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-5xl font-extrabold"
+          className="text-5xl md:text-6xl font-extrabold"
         >
           Big Billion Days Sale 🎉
         </motion.h2>
 
         <p className="mt-6 text-lg opacity-90">
-          Up to <span className="font-bold">70% OFF</span> on Fashion,
-          Electronics & Furniture
+          Up to <span className="font-bold">70% OFF</span> on all categories
         </p>
 
         <button
           onClick={() => navigate("/shipping")}
-          className="mt-8 bg-white text-indigo-600 px-8 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 hover:bg-gray-100 transition"
+          className="mt-8 bg-white text-indigo-600 px-8 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 hover:bg-gray-100 transition flex items-center gap-2 mx-auto"
         >
-          Shop Now
+          Shop Now <FaArrowRight />
         </button>
+      </div>
 
+      {/* CATEGORY SECTION (NEW) */}
+      <div className="px-8 py-16 max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold text-center mb-10">
+          🛍️ Shop by Category
+        </h2>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {categories.map((cat, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ scale: 1.08 }}
+              onClick={() => navigate(cat.route)}
+              className="cursor-pointer bg-white p-6 rounded-2xl shadow-md text-center hover:shadow-xl transition"
+            >
+              <h3 className="font-semibold text-lg text-indigo-600">
+                {cat.name}
+              </h3>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       {/* PRODUCTS */}
-      <div className="px-8 py-16 max-w-7xl mx-auto">
-
+      <div className="px-8 pb-20 max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold mb-12 text-center">
           🔥 Trending Products
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
-
           {filteredProducts.map((product) => (
-
             <motion.div
               key={product.id}
               whileHover={{ y: -10 }}
               className="bg-white p-5 rounded-2xl shadow-md hover:shadow-2xl transition cursor-pointer relative group"
               onClick={() => goToDetails(product)}
             >
-
               <FaHeart
                 className="absolute top-4 right-4 text-gray-400 group-hover:text-red-500 transition"
                 onClick={(e) => {
@@ -163,16 +177,23 @@ const Home = () => {
                 ₹{product.price}
               </p>
 
-              <button className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate("/cart");
+                }}
+                className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+              >
                 Add to Cart
               </button>
-
             </motion.div>
-
           ))}
-
         </div>
+      </div>
 
+      {/* FOOTER */}
+      <div className="bg-indigo-900 text-white text-center py-6">
+        <p className="text-sm">© 2026 TrendyStore. All rights reserved.</p>
       </div>
 
     </div>
