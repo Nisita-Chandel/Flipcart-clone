@@ -1,8 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import API from "../services/api";
-import { FaHeart, FaSearch } from "react-icons/fa";
+import { FaHeart, FaSearch, FaMicrophone } from "react-icons/fa";
 
 const categories = ["All", "Electronics", "Fashion", "Home"];
+
+// 🔥 Better fuzzy match (checks sequence)
+const fuzzyMatch = (text, search) => {
+  let t = text.toLowerCase();
+  let s = search.toLowerCase();
+
+  let i = 0;
+  for (let char of t) {
+    if (char === s[i]) i++;
+    if (i === s.length) return true;
+  }
+  return false;
+};
+
+// 🔥 Highlight match
+const highlightText = (text, search) => {
+  if (!search) return text;
+  const regex = new RegExp(`(${search})`, "gi");
+  return text.split(regex).map((part, i) =>
+    part.toLowerCase() === search.toLowerCase() ? (
+      <span key={i} className="bg-yellow-200 px-1 rounded">
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+};
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -10,7 +38,10 @@ const Products = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [loading, setLoading] = useState(true);
   const [wishlist, setWishlist] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [recentSearches, setRecentSearches] = useState([]);
 
+  // 🔥 Load products + recent searches
   useEffect(() => {
     API.get("/products")
       .then((res) => {
@@ -18,7 +49,33 @@ const Products = () => {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+
+    const stored = JSON.parse(localStorage.getItem("recentSearches")) || [];
+    setRecentSearches(stored);
   }, []);
+
+  // 🔥 Save search history
+  const saveSearch = (value) => {
+    if (!value) return;
+
+    let updated = [value, ...recentSearches.filter((s) => s !== value)];
+    updated = updated.slice(0, 5);
+
+    setRecentSearches(updated);
+    localStorage.setItem("recentSearches", JSON.stringify(updated));
+  };
+
+  // 🔥 Voice Search
+  const handleVoiceSearch = () => {
+    const recognition = new window.webkitSpeechRecognition();
+    recognition.start();
+
+    recognition.onresult = (event) => {
+      const voiceText = event.results[0][0].transcript;
+      setSearch(voiceText);
+      saveSearch(voiceText);
+    };
+  };
 
   const toggleWishlist = (id) => {
     setWishlist((prev) =>
@@ -28,51 +85,106 @@ const Products = () => {
     );
   };
 
-  const filteredProducts = products.filter((p) => {
-    return (
-      p.name.toLowerCase().includes(search.toLowerCase()) &&
-      (activeCategory === "All" || p.category === activeCategory)
-    );
-  });
+  // 🔥 Filtered products
+  const filteredProducts = useMemo(() => {
+    const searchText = search.toLowerCase().trim();
+
+    return products.filter((p) => {
+      const name = p.name?.toLowerCase() || "";
+      const category = p.category?.toLowerCase() || "";
+
+      return (
+        (fuzzyMatch(name, searchText) ||
+          fuzzyMatch(category, searchText)) &&
+        (activeCategory === "All" ||
+          category === activeCategory.toLowerCase())
+      );
+    });
+  }, [products, search, activeCategory]);
+
+  // 🔥 Suggestions (products + history)
+  const suggestions = useMemo(() => {
+    if (!search) return recentSearches;
+
+    const productMatches = products
+      .filter((p) =>
+        p.name?.toLowerCase().includes(search.toLowerCase())
+      )
+      .slice(0, 3)
+      .map((p) => p.name);
+
+    return [...new Set([...productMatches, ...recentSearches])].slice(0, 5);
+  }, [search, products, recentSearches]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 px-6 py-12">
-      
+
       {/* HEADER */}
       <div className="text-center mb-10">
-        <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight">
+        <h1 className="text-5xl font-extrabold text-gray-900">
           Premium Store ✨
         </h1>
         <p className="text-gray-500 mt-3">
-          Discover elegant & modern products curated for you
+          AI-powered shopping experience
         </p>
       </div>
 
-      {/* SEARCH */}
+      {/* 🔍 SEARCH BAR */}
       <div className="max-w-xl mx-auto mb-6 relative">
         <input
           type="text"
-          placeholder="Search for products..."
-          className="w-full py-3 pl-12 pr-4 rounded-full border border-gray-200 
-                     shadow-md focus:ring-2 focus:ring-indigo-400 outline-none 
-                     transition-all duration-300 focus:scale-105"
+          placeholder="Search products..."
+          className="w-full py-3 pl-12 pr-12 rounded-full border shadow-md focus:ring-2 focus:ring-indigo-400 outline-none"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setShowSuggestions(true);
+          }}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") saveSearch(search);
+          }}
         />
+
         <FaSearch className="absolute top-4 left-4 text-gray-400" />
+
+        {/* 🎤 Voice Button */}
+        <FaMicrophone
+          onClick={handleVoiceSearch}
+          className="absolute top-4 right-4 text-gray-500 cursor-pointer hover:text-indigo-600"
+        />
+
+        {/* 🔥 Suggestions */}
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="absolute w-full bg-white mt-2 rounded-xl shadow-lg z-50">
+            {suggestions.map((item, i) => (
+              <div
+                key={i}
+                onClick={() => {
+                  setSearch(item);
+                  saveSearch(item);
+                  setShowSuggestions(false);
+                }}
+                className="px-4 py-3 hover:bg-indigo-50 cursor-pointer"
+              >
+                {highlightText(item, search)}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* CATEGORY FILTER */}
+      {/* CATEGORY */}
       <div className="flex justify-center gap-4 mb-12 flex-wrap">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300
+            className={`px-5 py-2 rounded-full text-sm font-semibold
               ${
                 activeCategory === cat
-                  ? "bg-indigo-600 text-white shadow-lg scale-105"
-                  : "bg-white text-gray-600 border hover:bg-indigo-50"
+                  ? "bg-indigo-600 text-white scale-105"
+                  : "bg-white text-gray-600 border"
               }`}
           >
             {cat}
@@ -80,118 +192,53 @@ const Products = () => {
         ))}
       </div>
 
-      {/* LOADING SKELETON */}
+      {/* PRODUCTS */}
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="h-64 bg-gray-200 rounded-2xl animate-pulse"
-            ></div>
+            <div key={i} className="h-64 bg-gray-200 rounded-2xl animate-pulse"></div>
           ))}
         </div>
       ) : (
         <>
-          {/* PRODUCTS */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
             {filteredProducts.map((product) => (
-              <div
-                key={product._id}
-                className="group relative rounded-3xl overflow-hidden
-                           bg-white/60 backdrop-blur-xl border
-                           shadow-lg hover:shadow-2xl 
-                           transition-all duration-500 hover:-translate-y-3"
-              >
-                {/* WISHLIST */}
-                <button
-                  onClick={() => toggleWishlist(product._id)}
-                  className={`absolute top-4 right-4 z-10 p-2 rounded-full shadow 
-                  transition ${
-                    wishlist.includes(product._id)
-                      ? "bg-red-100 text-red-500"
-                      : "bg-white text-gray-400"
-                  }`}
-                >
-                  <FaHeart />
-                </button>
+              <div key={product._id} className="bg-white rounded-2xl shadow hover:shadow-xl transition">
 
-                {/* IMAGE */}
-                <div className="h-56 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-                  <img
-                    src={product.image || "https://via.placeholder.com/300"}
-                    alt={product.name}
-                    className="h-full object-contain transition duration-500 group-hover:scale-110"
-                  />
+                <div className="h-56 flex items-center justify-center bg-gray-100">
+                  <img src={product.image} alt="" className="h-full object-contain" />
                 </div>
 
-                {/* OVERLAY */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-                  <button className="bg-white px-5 py-2 rounded-full font-semibold hover:bg-gray-900 hover:text-white transition">
-                    Quick View 👀
-                  </button>
-                </div>
-
-                {/* CONTENT */}
-                <div className="p-5">
-                  <h3 className="text-lg font-bold text-gray-800 truncate">
-                    {product.name}
+                <div className="p-4">
+                  <h3 className="font-bold">
+                    {highlightText(product.name, search)}
                   </h3>
 
-                  <div className="text-yellow-400 text-sm mt-1">
-                    ★★★★☆
-                    <span className="text-gray-400 text-xs ml-2">(4.0)</span>
-                  </div>
+                  <p className="text-gray-500 text-sm">
+                    {product.category}
+                  </p>
 
-                  <p className="text-2xl font-extrabold mt-2 text-gray-900">
+                  <p className="text-xl font-bold mt-2">
                     ₹{product.price}
                   </p>
 
-                  {/* BUTTONS */}
-                  <div className="mt-4 flex gap-2">
-                    <button className="flex-1 py-2 rounded-xl text-white font-semibold
-                      bg-gradient-to-r from-indigo-500 to-blue-500
-                      hover:from-blue-600 hover:to-indigo-600
-                      transition shadow-md">
-                      Add 🛒
-                    </button>
-
-                    <button className="flex-1 py-2 rounded-xl border text-gray-600
-                      hover:bg-gray-900 hover:text-white transition">
-                      View
-                    </button>
-                  </div>
+                  <button className="mt-3 w-full py-2 bg-indigo-600 text-white rounded-xl">
+                    Add to Cart 🛒
+                  </button>
                 </div>
-
-                {/* GLOW BORDER */}
-                <div className="absolute inset-0 rounded-3xl border-2 border-transparent 
-                  group-hover:border-indigo-400 transition-all duration-500 pointer-events-none"></div>
               </div>
             ))}
           </div>
 
-          {/* EMPTY STATE */}
           {filteredProducts.length === 0 && (
             <div className="text-center mt-20">
               <h2 className="text-2xl font-bold text-gray-600">
                 No Products Found 😢
               </h2>
-              <p className="text-gray-400 mt-2">
-                Try searching something else
-              </p>
             </div>
           )}
         </>
       )}
-
-      {/* SCROLL TOP */}
-      <a
-        href="#top"
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-indigo-600 to-blue-600
-                   text-white px-4 py-3 rounded-full shadow-xl
-                   hover:scale-110 transition"
-      >
-        ⬆
-      </a>
     </div>
   );
 };
