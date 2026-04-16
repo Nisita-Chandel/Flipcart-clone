@@ -37,67 +37,81 @@ const Faq = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 py-16 px-4">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-200 via-white to-purple-200 flex items-center justify-center px-4 py-16">
+      
+      <div className="w-full max-w-5xl">
 
-        {/* Heading Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-800 mb-4">
-            Frequently Asked Questions
+        {/* Heading */}
+        <div className="text-center mb-14">
+          <h1 className="text-5xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
+            FAQs
           </h1>
-          <p className="text-gray-600 text-lg">
-            Find answers to the most common questions about our services.
+          <p className="text-gray-600 mt-4 text-lg">
+            Everything you need to know about our services ✨
           </p>
         </div>
 
-        {/* FAQ Cards */}
+        {/* FAQ Container */}
         <div className="space-y-6">
           {faqData.map((faq, index) => (
             <div
               key={index}
-              className={`group bg-white border border-gray-200 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer ${
-                activeIndex === index ? "ring-2 ring-indigo-400" : ""
-              }`}
               onClick={() => toggleFAQ(index)}
+              className={`cursor-pointer rounded-2xl p-[1px] bg-gradient-to-r from-indigo-400 to-purple-400 transition-all duration-300 ${
+                activeIndex === index ? "scale-[1.02]" : ""
+              }`}
             >
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg md:text-xl font-semibold text-gray-800 group-hover:text-indigo-600 transition">
-                  {faq.question}
-                </h2>
+              <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-6 shadow-lg hover:shadow-2xl transition">
 
+                {/* Question */}
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg md:text-xl font-semibold text-gray-800">
+                    {faq.question}
+                  </h2>
+
+                  <div
+                    className={`p-2 rounded-full transition-all duration-300 ${
+                      activeIndex === index
+                        ? "bg-indigo-600 text-white rotate-180"
+                        : "bg-indigo-100 text-indigo-600"
+                    }`}
+                  >
+                    <FaChevronDown />
+                  </div>
+                </div>
+
+                {/* Answer */}
                 <div
-                  className={`bg-indigo-100 text-indigo-600 p-2 rounded-full transition-transform duration-300 ${
-                    activeIndex === index ? "rotate-180 bg-indigo-500 text-white" : ""
+                  className={`grid transition-all duration-500 ease-in-out ${
+                    activeIndex === index
+                      ? "grid-rows-[1fr] opacity-100 mt-4"
+                      : "grid-rows-[0fr] opacity-0"
                   }`}
                 >
-                  <FaChevronDown />
+                  <div className="overflow-hidden">
+                    <p className="text-gray-600 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Answer Section */}
-              <div
-                className={`overflow-hidden transition-all duration-500 ${
-                  activeIndex === index ? "max-h-40 mt-4" : "max-h-0"
-                }`}
-              >
-                <p className="text-gray-600 leading-relaxed">
-                  {faq.answer}
-                </p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Bottom CTA */}
+        {/* CTA */}
         <div className="mt-16 text-center">
           <h3 className="text-2xl font-semibold text-gray-800 mb-3">
             Still have questions?
           </h3>
           <p className="text-gray-600 mb-6">
-            Our support team is here to help you anytime.
+            We’re always here to help you 💜
           </p>
-          <button className="bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition shadow-lg">
-            Contact Support
+
+          <button className="relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-medium text-white rounded-full group bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg">
+            <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
+            <span className="relative">Contact Support</span>
           </button>
         </div>
 
