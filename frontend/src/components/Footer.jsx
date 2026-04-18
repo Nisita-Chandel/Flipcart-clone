@@ -35,9 +35,11 @@ const Footer = () => {
 
         {/* ABOUT */}
         <div>
-          <h2 className="text-white text-2xl font-bold mb-4">
-            TrendyStore
-          </h2>
+        <h2 className="text-white text-2xl font-bold mb-4 cursor-pointer hover:text-indigo-300 transition">
+  <Link to="/trendystore">
+    TrendyStore
+  </Link>
+</h2>
 
           <p className="text-gray-400 leading-6">
             India's leading online shopping platform offering

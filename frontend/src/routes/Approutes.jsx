@@ -19,6 +19,7 @@ import Furniture from "../pages/furniture";
 import Electronics from "../pages/Electronics";
 import Beauty from "../pages/Beauty";
 import Subscribe from "../pages/Subscribe";
+import TrendyStore from "../pages/TrendyStore";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -42,6 +43,7 @@ const AppRoutes = () => {
       <Route path="/electronics" element={<Electronics/>}/>
       <Route path="/beauty" element={<Beauty/>}/>
       <Route path="/subscribe" element={<Subscribe/>}/>
+      <Route path="/trendystore" element={<TrendyStore/>}/>
     </Routes>
   );
 };
