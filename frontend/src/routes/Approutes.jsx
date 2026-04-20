@@ -20,6 +20,7 @@ import Electronics from "../pages/Electronics";
 import Beauty from "../pages/Beauty";
 import Subscribe from "../pages/Subscribe";
 import TrendyStore from "../pages/TrendyStore";
+import Reserved from "../pages/Reserved";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -44,6 +45,7 @@ const AppRoutes = () => {
       <Route path="/beauty" element={<Beauty/>}/>
       <Route path="/subscribe" element={<Subscribe/>}/>
       <Route path="/trendystore" element={<TrendyStore/>}/>
+      <Route path="/reserved" element={<Reserved/>}/>
     </Routes>
   );
 };
