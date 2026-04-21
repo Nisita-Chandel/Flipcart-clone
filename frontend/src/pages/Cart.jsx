@@ -20,17 +20,7 @@ const Cart = () => {
     setCartItems(formattedCart);
   }, []);
 
-  const placeOrder = () => {
-    alert("🎉 Order Placed Successfully!");
-
-    localStorage.removeItem("cart"); // clear storage
-    setCartItems([]);
-
-    setTimeout(() => {
-      navigate("/");
-    }, 1000);
-  };
-
+  // ✅ Increase Quantity
   const increaseQty = (id) => {
     setCartItems((items) =>
       items.map((item) =>
@@ -41,6 +31,7 @@ const Cart = () => {
     );
   };
 
+  // ✅ Decrease Quantity
   const decreaseQty = (id) => {
     setCartItems((items) =>
       items.map((item) =>
@@ -51,12 +42,12 @@ const Cart = () => {
     );
   };
 
+  // ✅ Remove Item
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
 
     setCartItems(updatedCart);
 
-    // update localStorage
     const storageCart = updatedCart.map((item) => ({
       id: item.id,
       title: item.name,
@@ -67,10 +58,73 @@ const Cart = () => {
     localStorage.setItem("cart", JSON.stringify(storageCart));
   };
 
+  // ✅ Total Price
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+  // ✅ RAZORPAY PAYMENT FUNCTION
+  const placeOrder = async () => {
+    try {
+      console.log("Calling backend...");
+  
+      const res = await fetch("http://localhost:4000/api/payment/create-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: totalPrice }),
+      });
+  
+      if (!res.ok) {
+        throw new Error("Server not responding");
+      }
+  
+      const data = await res.json();
+  
+      console.log("Order created:", data);
+  
+      const options = {
+        key: "rzp_test_Rgz6mQTZRldpAy",
+        amount: data.amount,
+        currency: "INR",
+        order_id: data.id,
+        name: "My Store",
+        description: "Order Payment",
+  
+        handler: async function (response) {
+          console.log("Payment response:", response);
+  
+          await fetch("http://localhost:4000/api/payment/verify-payment", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(response),
+          });
+  
+          alert("🎉 Payment Successful!");
+  
+          localStorage.removeItem("cart");
+          setCartItems([]);
+  
+          navigate("/");
+        },
+  
+        theme: {
+          color: "#22c55e",
+        },
+      };
+  
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+  
+    } catch (error) {
+      console.error("ERROR:", error);
+      alert("Backend connection failed ❌");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 md:p-10">
@@ -165,7 +219,7 @@ const Cart = () => {
               onClick={placeOrder}
               className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
             >
-              Place Order
+              Pay Now
             </button>
           </div>
 
