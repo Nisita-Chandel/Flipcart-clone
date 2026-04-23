@@ -45,7 +45,6 @@ const Cart = () => {
   // ✅ Remove Item
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
-
     setCartItems(updatedCart);
 
     const storageCart = updatedCart.map((item) => ({
@@ -64,38 +63,47 @@ const Cart = () => {
     0
   );
 
+  // ✅ Load Razorpay Script Dynamically
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   // ✅ RAZORPAY PAYMENT FUNCTION
   const placeOrder = async () => {
     try {
-      console.log("Calling backend...");
-  
-      const res = await fetch("http://localhost:4000/api/payment/create-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount: totalPrice }),
-      });
-  
-      // ❌ Handle server down
-      if (!res) {
-        throw new Error("No response from server");
+      const isLoaded = await loadRazorpayScript();
+
+      if (!isLoaded) {
+        alert("Razorpay SDK failed to load ❌");
+        return;
       }
-  
+
+      console.log("Calling backend...");
+
+      const res = await fetch(
+        "http://localhost:4000/api/payment/create-order",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ amount: totalPrice }),
+        }
+      );
+
       if (!res.ok) {
         const text = await res.text();
         throw new Error(text || "Server error");
       }
-  
+
       const data = await res.json();
-  
-      console.log("Order created:", data);
-  
-      if (!window.Razorpay) {
-        alert("Razorpay SDK not loaded ❌");
-        return;
-      }
-  
+
       const options = {
         key: "rzp_test_Rgz6mQTZRldpAy",
         amount: data.amount,
@@ -103,11 +111,11 @@ const Cart = () => {
         order_id: data.id,
         name: "My Store",
         description: "Order Payment",
-  
+
         handler: async function (response) {
           try {
             const verifyRes = await fetch(
-              "http://localhost:3000/api/payment/verify-payment",
+              "http://localhost:4000/api/payment/verify-payment",
               {
                 method: "POST",
                 headers: {
@@ -116,34 +124,33 @@ const Cart = () => {
                 body: JSON.stringify(response),
               }
             );
-  
+
             if (!verifyRes.ok) {
               throw new Error("Payment verification failed");
             }
-  
+
             alert("🎉 Payment Successful!");
-  
+
             localStorage.removeItem("cart");
             setCartItems([]);
-  
+
             navigate("/");
           } catch (err) {
             console.error("Verification error:", err);
             alert("Payment verification failed ❌");
           }
         },
-  
+
         theme: {
           color: "#22c55e",
         },
       };
-  
+
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (error) {
       console.error("ERROR:", error);
-  
-      // 🔥 Better error message
+
       if (error.message.includes("Failed to fetch")) {
         alert("❌ Backend not running (Check port 4000)");
       } else {
@@ -151,6 +158,7 @@ const Cart = () => {
       }
     }
   };
+
   return (
     <div className="min-h-screen bg-gray-100 p-6 md:p-10">
       <h2 className="text-3xl font-bold mb-8 text-gray-800">🛒 Your Cart</h2>
@@ -167,7 +175,6 @@ const Cart = () => {
         </div>
       ) : (
         <div className="grid lg:grid-cols-3 gap-8">
-
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-6">
             {cartItems.map((item) => (
@@ -247,7 +254,6 @@ const Cart = () => {
               Pay Now
             </button>
           </div>
-
         </div>
       )}
     </div>
