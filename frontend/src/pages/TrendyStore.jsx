@@ -32,15 +32,16 @@ const TrendyStore = () => {
     },
   ];
 
-  // ✅ ADD TO CART FUNCTION (localStorage)
   const handleAddToCart = (product) => {
     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-
     const updatedCart = [...existingCart, product];
-
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    navigate("/cart");
+  };
 
-    navigate("/cart"); // go to cart page
+  const handleExplore = () => {
+    console.log("Navigating to Explore page..."); // ✅ debug
+    navigate("/explore");
   };
 
   return (
@@ -54,7 +55,7 @@ const TrendyStore = () => {
 
         <FaShoppingBag
           onClick={() => navigate("/cart")}
-          className="text-2xl text-indigo-600 cursor-pointer hover:scale-110"
+          className="text-2xl text-indigo-600 cursor-pointer hover:scale-110 transition"
         />
       </div>
 
@@ -63,7 +64,7 @@ const TrendyStore = () => {
         {products.map((item) => (
           <div
             key={item.id}
-            className="bg-white rounded-2xl shadow-lg p-4 hover:scale-105 transition"
+            className="bg-white rounded-2xl shadow-lg p-4 hover:scale-105 transition duration-300"
           >
             <img
               src={item.img}
@@ -83,13 +84,24 @@ const TrendyStore = () => {
 
             <button
               onClick={() => handleAddToCart(item)}
-              className="mt-3 w-full bg-indigo-600 text-white py-2 rounded-xl"
+              className="mt-3 w-full bg-indigo-600 text-white py-2 rounded-xl hover:bg-indigo-700 transition"
             >
               Add to Cart
             </button>
           </div>
         ))}
       </div>
+
+      {/* Explore Button */}
+      <div className="flex justify-center mt-12">
+        <button
+          onClick={handleExplore}
+          className="bg-black text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-gray-800 transition"
+        >
+          Explore More 🔍
+        </button>
+      </div>
+
     </div>
   );
 };
