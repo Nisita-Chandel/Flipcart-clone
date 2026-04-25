@@ -1,6 +1,10 @@
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 
+if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+  console.error("❌ Razorpay keys missing in .env");
+}
+
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
@@ -9,10 +13,12 @@ const razorpay = new Razorpay({
 // ✅ Create Order
 exports.createOrder = async (req, res) => {
   try {
+    console.log("📥 Incoming order request:", req.body);
+
     const { amount } = req.body;
 
-    if (!amount) {
-      return res.status(400).json({ error: "Amount is required" });
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: "Invalid amount" });
     }
 
     const options = {
@@ -23,12 +29,15 @@ exports.createOrder = async (req, res) => {
 
     const order = await razorpay.orders.create(options);
 
-    console.log("✅ Order created:", order.id);
+    console.log("✅ Order created:", order);
 
     res.json(order);
   } catch (error) {
-    console.error("❌ Razorpay Error:", error);
-    res.status(500).json({ error: "Order creation failed" });
+    console.error("❌ Razorpay Error FULL:", error);
+    res.status(500).json({
+      error: "Order creation failed",
+      details: error.message,
+    });
   }
 };
 
@@ -49,12 +58,9 @@ exports.verifyPayment = (req, res) => {
       .digest("hex");
 
     if (expectedSignature === razorpay_signature) {
-      return res.json({ success: true, message: "Payment Verified ✅" });
+      return res.json({ success: true });
     } else {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Payment ❌",
-      });
+      return res.status(400).json({ success: false });
     }
   } catch (err) {
     console.error("❌ Verification Error:", err);

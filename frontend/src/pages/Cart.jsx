@@ -5,7 +5,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
 
-  // ✅ Load cart from localStorage
+  // ✅ Load cart
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -20,7 +20,7 @@ const Cart = () => {
     setCartItems(formattedCart);
   }, []);
 
-  // ✅ Increase Quantity
+  // ✅ Quantity handlers
   const increaseQty = (id) => {
     setCartItems((items) =>
       items.map((item) =>
@@ -31,7 +31,6 @@ const Cart = () => {
     );
   };
 
-  // ✅ Decrease Quantity
   const decreaseQty = (id) => {
     setCartItems((items) =>
       items.map((item) =>
@@ -42,28 +41,30 @@ const Cart = () => {
     );
   };
 
-  // ✅ Remove Item
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
     setCartItems(updatedCart);
 
-    const storageCart = updatedCart.map((item) => ({
-      id: item.id,
-      title: item.name,
-      price: item.price,
-      img: item.image,
-    }));
-
-    localStorage.setItem("cart", JSON.stringify(storageCart));
+    localStorage.setItem(
+      "cart",
+      JSON.stringify(
+        updatedCart.map((item) => ({
+          id: item.id,
+          title: item.name,
+          price: item.price,
+          img: item.image,
+        }))
+      )
+    );
   };
 
-  // ✅ Total Price
+  // ✅ Total price
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
 
-  // ✅ Load Razorpay Script Dynamically
+  // ✅ Load Razorpay SDK
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -74,7 +75,7 @@ const Cart = () => {
     });
   };
 
-  // ✅ RAZORPAY PAYMENT FUNCTION
+  // ✅ PAYMENT FUNCTION
   const placeOrder = async () => {
     try {
       const isLoaded = await loadRazorpayScript();
@@ -97,22 +98,35 @@ const Cart = () => {
         }
       );
 
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Server error");
-      }
-
       const data = await res.json();
 
+      if (!data.id) {
+        alert("❌ Order creation failed");
+        return;
+      }
+
+      // ✅ RAZORPAY OPTIONS (FIXED)
       const options = {
-        key: "rzp_test_Rgz6mQTZRldpAy",
+        key: "rzp_test_Rgz6mQTZRldpAy", // must match backend
         amount: data.amount,
         currency: "INR",
         order_id: data.id,
         name: "My Store",
         description: "Order Payment",
 
+        prefill: {
+          name: "Test User",
+          email: "test@example.com",
+          contact: "9999999999",
+        },
+
+        theme: {
+          color: "#22c55e",
+        },
+
         handler: async function (response) {
+          console.log("✅ Payment success:", response);
+
           try {
             const verifyRes = await fetch(
               "http://localhost:4000/api/payment/verify-payment",
@@ -125,131 +139,78 @@ const Cart = () => {
               }
             );
 
-            if (!verifyRes.ok) {
-              throw new Error("Payment verification failed");
+            const verifyData = await verifyRes.json();
+
+            if (verifyData.success) {
+              alert("🎉 Payment Successful!");
+
+              localStorage.removeItem("cart");
+              setCartItems([]);
+              navigate("/");
+            } else {
+              alert("❌ Payment Verification Failed");
             }
-
-            alert("🎉 Payment Successful!");
-
-            localStorage.removeItem("cart");
-            setCartItems([]);
-
-            navigate("/");
           } catch (err) {
             console.error("Verification error:", err);
-            alert("Payment verification failed ❌");
+            alert("Verification error ❌");
           }
         },
 
-        theme: {
-          color: "#22c55e",
+        modal: {
+          ondismiss: function () {
+            console.log("❌ Payment popup closed");
+          },
         },
       };
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
+
     } catch (error) {
       console.error("ERROR:", error);
-
-      if (error.message.includes("Failed to fetch")) {
-        alert("❌ Backend not running (Check port 4000)");
-      } else {
-        alert(error.message);
-      }
+      alert("❌ Something went wrong");
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 md:p-10">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800">🛒 Your Cart</h2>
+      <h2 className="text-3xl font-bold mb-8">🛒 Your Cart</h2>
 
       {cartItems.length === 0 ? (
-        <div className="bg-white p-10 rounded-lg shadow text-center">
-          <p className="text-gray-600 text-lg">Your cart is empty</p>
-          <button
-            onClick={() => navigate("/")}
-            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-          >
-            Continue Shopping
-          </button>
-        </div>
+        <p>Your cart is empty</p>
       ) : (
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
+          {/* Items */}
           <div className="lg:col-span-2 space-y-6">
             {cartItems.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-lg shadow p-5 flex gap-5 items-center"
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-24 h-24 object-contain"
-                />
+              <div key={item.id} className="bg-white p-5 rounded shadow flex gap-5">
+                <img src={item.image} className="w-24 h-24 object-contain" />
 
                 <div className="flex-1">
-                  <h3 className="font-semibold text-lg text-gray-800">
-                    {item.name}
-                  </h3>
+                  <h3>{item.name}</h3>
+                  <p>₹{item.price}</p>
 
-                  <p className="text-green-600 font-semibold text-lg">
-                    ₹{item.price}
-                  </p>
-
-                  <div className="flex items-center gap-4 mt-3">
-                    <button
-                      onClick={() => decreaseQty(item.id)}
-                      className="px-3 py-1 border rounded"
-                    >
-                      −
-                    </button>
-
+                  <div className="flex gap-3">
+                    <button onClick={() => decreaseQty(item.id)}>-</button>
                     <span>{item.quantity}</span>
-
-                    <button
-                      onClick={() => increaseQty(item.id)}
-                      className="px-3 py-1 border rounded"
-                    >
-                      +
-                    </button>
+                    <button onClick={() => increaseQty(item.id)}>+</button>
                   </div>
                 </div>
 
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Remove
-                </button>
+                <button onClick={() => removeItem(item.id)}>Remove</button>
               </div>
             ))}
           </div>
 
-          {/* Price Summary */}
-          <div className="bg-white rounded-lg shadow p-6 h-fit">
-            <h3 className="text-xl font-semibold mb-4">Price Details</h3>
+          {/* Summary */}
+          <div className="bg-white p-6 rounded shadow">
+            <h3>Price Details</h3>
 
-            <div className="flex justify-between mb-2">
-              <span>Items ({cartItems.length})</span>
-              <span>₹{totalPrice}</span>
-            </div>
-
-            <div className="flex justify-between mb-2">
-              <span>Delivery</span>
-              <span className="text-green-600">FREE</span>
-            </div>
-
-            <hr className="my-4" />
-
-            <div className="flex justify-between font-bold text-lg">
-              <span>Total Amount</span>
-              <span>₹{totalPrice}</span>
-            </div>
+            <p>Total: ₹{totalPrice}</p>
 
             <button
               onClick={placeOrder}
-              className="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
+              className="w-full mt-4 bg-green-600 text-white py-2 rounded"
             >
               Pay Now
             </button>
