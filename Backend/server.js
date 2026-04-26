@@ -5,7 +5,6 @@ const cors = require("cors");
 
 const connectdb = require("./src/config/db");
 
-// Routes
 const authRoutes = require("./src/routes/auth.routes");
 const paymentRoutes = require("./src/routes/paymentRoutes");
 
@@ -14,7 +13,7 @@ const app = express();
 /* MIDDLEWARE */
 app.use(
   cors({
-    origin: "http://localhost:5173", // ⚠️ FIXED (React Vite default)
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -30,12 +29,25 @@ app.get("/", (req, res) => {
   res.send("API is running 🚀");
 });
 
-/* DATABASE */
-connectdb();
+/* ERROR HANDLER */
+app.use((err, req, res, next) => {
+  console.error("❌ Server Error:", err.stack);
+  res.status(500).send("Internal Server Error");
+});
 
+/* START SERVER SAFELY */
 const PORT = process.env.PORT || 4000;
 
-/* START SERVER */
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectdb();
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error.message);
+  }
+};
+
+startServer();

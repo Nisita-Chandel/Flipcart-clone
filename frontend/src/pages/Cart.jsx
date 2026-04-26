@@ -107,13 +107,12 @@ const Cart = () => {
 
       // ✅ RAZORPAY OPTIONS (FIXED)
       const options = {
-        key: "rzp_test_Rgz6mQTZRldpAy", // must match backend
+        key: data.key, // ✅ dynamic key from backend
         amount: data.amount,
         currency: "INR",
         order_id: data.id,
         name: "My Store",
         description: "Order Payment",
-
         prefill: {
           name: "Test User",
           email: "test@example.com",

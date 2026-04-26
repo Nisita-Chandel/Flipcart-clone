@@ -30,8 +30,11 @@ exports.createOrder = async (req, res) => {
     const order = await razorpay.orders.create(options);
 
     console.log("✅ Order created:", order);
-
-    res.json(order);
+    res.json({
+      ...order,
+      key: process.env.RAZORPAY_KEY_ID,
+    });
+   
   } catch (error) {
     console.error("❌ Razorpay Error FULL:", error);
     res.status(500).json({
