@@ -40,17 +40,19 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-/* Hash password only if modified */
+/* Hash password */
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
+/* Compare password */
 userSchema.methods.comparePass = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
+/* Generate JWT */
 userSchema.methods.generateToken = function () {
   return jwt.sign(
     { id: this._id },

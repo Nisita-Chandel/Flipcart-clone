@@ -10,7 +10,9 @@ const paymentRoutes = require("./src/routes/paymentRoutes");
 
 const app = express();
 
-/* MIDDLEWARE */
+/* ================= MIDDLEWARE ================= */
+
+// ✅ CORS (important for frontend connection)
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -18,35 +20,53 @@ app.use(
   })
 );
 
+// ✅ Body parser
 app.use(express.json());
+
+// ✅ Cookie parser
 app.use(cookieParser());
 
-/* ROUTES */
-app.use("/api/auth", authRoutes);
-app.use("/api/payment", paymentRoutes);
+/* ================= ROUTES ================= */
 
+// Health check
 app.get("/", (req, res) => {
   res.send("API is running 🚀");
 });
 
-/* ERROR HANDLER */
+// Auth routes
+app.use("/api/auth", authRoutes);
+
+// Payment routes
+app.use("/api/payment", paymentRoutes);
+
+/* ================= ERROR HANDLER ================= */
+
 app.use((err, req, res, next) => {
-  console.error("❌ Server Error:", err.stack);
-  res.status(500).send("Internal Server Error");
+  console.error("❌ Server Error:", err.message);
+
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
 });
 
-/* START SERVER SAFELY */
+/* ================= START SERVER ================= */
+
 const PORT = process.env.PORT || 4000;
 
 const startServer = async () => {
   try {
+    // ✅ Connect DB first
     await connectdb();
+
+    console.log("🟢 MongoDB Connected Successfully");
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
   } catch (error) {
     console.error("❌ Failed to start server:", error.message);
+    process.exit(1);
   }
 };
 

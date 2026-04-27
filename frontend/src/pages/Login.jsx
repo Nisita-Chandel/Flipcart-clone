@@ -2,36 +2,56 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
 
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    // 🔴 Validation
+    if (!email || !password) {
+      return toast.error("All fields are required");
+    }
+
     try {
+      setLoading(true);
+
       const res = await axios.post(
         "http://localhost:4000/api/auth/login",
         { email, password },
-        { withCredentials:true }
+        { withCredentials: true }
       );
 
       toast.success(res.data.message);
 
+      // ✅ Save user in global state
+      setUser(res.data.user);
+
+      // ✅ Redirect to home
+      navigate("/");
+
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed");
+      toast.error(
+        error.response?.data?.message || "Login failed"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-r from-blue-500 to-indigo-600">
 
       <div className="bg-white shadow-xl rounded-xl w-full max-w-md p-8">
 
-        {/* Heading */}
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Welcome Back 👋
         </h2>
@@ -51,7 +71,6 @@ const Login = () => {
               value={email}
               onChange={(e)=>setEmail(e.target.value)}
               className="w-full border rounded-lg py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
             />
           </div>
 
@@ -64,7 +83,6 @@ const Login = () => {
               value={password}
               onChange={(e)=>setPassword(e.target.value)}
               className="w-full border rounded-lg py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
             />
           </div>
 
@@ -78,9 +96,14 @@ const Login = () => {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition"
+            disabled={loading}
+            className={`w-full py-2.5 rounded-lg font-semibold transition ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
         </form>
