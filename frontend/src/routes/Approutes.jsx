@@ -22,6 +22,8 @@ import Subscribe from "../pages/Subscribe";
 import TrendyStore from "../pages/TrendyStore";
 import Reserved from "../pages/Reserved";
 import Explore from "../pages/Explore";
+import Success from "../pages/Success";
+
 
 const AppRoutes = () => {
   return (
@@ -49,6 +51,7 @@ const AppRoutes = () => {
       <Route path="/trendystore" element={<TrendyStore/>}/>
       <Route path="/reserved" element={<Reserved/>}/>
       <Route path="/explore" element={<Explore />} />
+      <Route path="/success" element={<Success/>}/>
     </Routes>
   );
 };

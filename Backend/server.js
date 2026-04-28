@@ -7,6 +7,7 @@ const connectdb = require("./src/config/db");
 
 const authRoutes = require("./src/routes/auth.routes");
 const paymentRoutes = require("./src/routes/paymentRoutes");
+const orderRoutes = require("./src/routes/order.routes");
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use("/api/auth", authRoutes);
 
 // Payment routes
 app.use("/api/payment", paymentRoutes);
+app.use("/api/order", orderRoutes);
 
 /* ================= ERROR HANDLER ================= */
 

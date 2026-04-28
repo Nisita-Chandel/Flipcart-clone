@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 const Cart = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
+  const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // ✅ Load cart
+  // ✅ Load cart + phone
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -18,7 +20,15 @@ const Cart = () => {
     }));
 
     setCartItems(formattedCart);
+
+    const savedPhone = localStorage.getItem("phone") || "";
+    setPhone(savedPhone);
   }, []);
+
+  // ✅ Phone validation
+  const isValidPhone = (phone) => {
+    return /^[6-9]\d{9}$/.test(phone) && !/^(\d)\1{9}$/.test(phone);
+  };
 
   // ✅ Quantity handlers
   const increaseQty = (id) => {
@@ -78,14 +88,20 @@ const Cart = () => {
   // ✅ PAYMENT FUNCTION
   const placeOrder = async () => {
     try {
+      if (!isValidPhone(phone)) {
+        alert("❌ Enter a valid mobile number");
+        return;
+      }
+
+      setLoading(true);
+
       const isLoaded = await loadRazorpayScript();
 
       if (!isLoaded) {
         alert("Razorpay SDK failed to load ❌");
+        setLoading(false);
         return;
       }
-
-      console.log("Calling backend...");
 
       const res = await fetch(
         "http://localhost:4000/api/payment/create-order",
@@ -102,21 +118,23 @@ const Cart = () => {
 
       if (!data.id) {
         alert("❌ Order creation failed");
+        setLoading(false);
         return;
       }
 
-      // ✅ RAZORPAY OPTIONS (FIXED)
+      // ✅ Razorpay options
       const options = {
-        key: data.key, // ✅ dynamic key from backend
+        key: data.key,
         amount: data.amount,
         currency: "INR",
         order_id: data.id,
         name: "My Store",
         description: "Order Payment",
+
         prefill: {
-          name: "Test User",
-          email: "test@example.com",
-          contact: "9999999999",
+          name: "Customer",
+          email: "customer@email.com",
+          contact: phone,
         },
 
         theme: {
@@ -124,8 +142,6 @@ const Cart = () => {
         },
 
         handler: async function (response) {
-          console.log("✅ Payment success:", response);
-
           try {
             const verifyRes = await fetch(
               "http://localhost:4000/api/payment/verify-payment",
@@ -138,26 +154,26 @@ const Cart = () => {
               }
             );
 
-            const verifyData = await verifyRes.json();
+            const result = await verifyRes.json();
 
-            if (verifyData.success) {
-              alert("🎉 Payment Successful!");
+            if (result.success) {
+              alert("🎉 Payment Successful");
 
               localStorage.removeItem("cart");
-              setCartItems([]);
-              navigate("/");
+              navigate("/success");
             } else {
-              alert("❌ Payment Verification Failed");
+              alert("❌ Payment verification failed");
             }
           } catch (err) {
-            console.error("Verification error:", err);
-            alert("Verification error ❌");
+            console.error(err);
+            alert("Error verifying payment");
           }
-        },
+        }, // ✅ FIXED comma
 
         modal: {
           ondismiss: function () {
             console.log("❌ Payment popup closed");
+            setLoading(false);
           },
         },
       };
@@ -165,9 +181,11 @@ const Cart = () => {
       const razorpay = new window.Razorpay(options);
       razorpay.open();
 
+      setLoading(false);
     } catch (error) {
-      console.error("ERROR:", error);
+      console.error(error);
       alert("❌ Something went wrong");
+      setLoading(false);
     }
   };
 
@@ -203,15 +221,24 @@ const Cart = () => {
 
           {/* Summary */}
           <div className="bg-white p-6 rounded shadow">
-            <h3>Price Details</h3>
+            <h3 className="text-lg font-semibold">Price Details</h3>
 
-            <p>Total: ₹{totalPrice}</p>
+            <input
+              type="text"
+              placeholder="Enter phone number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full border p-2 mt-3 rounded"
+            />
+
+            <p className="mt-4 font-medium">Total: ₹{totalPrice}</p>
 
             <button
               onClick={placeOrder}
+              disabled={loading}
               className="w-full mt-4 bg-green-600 text-white py-2 rounded"
             >
-              Pay Now
+              {loading ? "Processing..." : "Pay Now"}
             </button>
           </div>
         </div>
