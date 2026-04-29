@@ -6,6 +6,13 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+  const savedPhone = localStorage.getItem("phone");
+
+if (!savedPhone) {
+  alert("Please verify phone first");
+  navigate("/verify");
+  return;
+}
 
   // ✅ Load cart + phone
   useEffect(() => {
@@ -98,7 +105,7 @@ const Cart = () => {
       const isLoaded = await loadRazorpayScript();
 
       if (!isLoaded) {
-        alert("Razorpay SDK failed to load ❌");
+        alert("Razorpay SDK failed ❌");
         setLoading(false);
         return;
       }
@@ -137,6 +144,13 @@ const Cart = () => {
           contact: phone,
         },
 
+        method: {
+          upi: true,
+          card: true,
+          netbanking: true,
+          wallet: true,
+        },
+
         theme: {
           color: "#22c55e",
         },
@@ -147,9 +161,7 @@ const Cart = () => {
               "http://localhost:4000/api/payment/verify-payment",
               {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(response),
               }
             );
@@ -158,7 +170,6 @@ const Cart = () => {
 
             if (result.success) {
               alert("🎉 Payment Successful");
-
               localStorage.removeItem("cart");
               navigate("/success");
             } else {
@@ -168,23 +179,24 @@ const Cart = () => {
             console.error(err);
             alert("Error verifying payment");
           }
-        }, // ✅ FIXED comma
+        },
 
         modal: {
           ondismiss: function () {
-            console.log("❌ Payment popup closed");
+            console.log("❌ Payment cancelled");
             setLoading(false);
           },
         },
       };
 
+      // ✅ VERY IMPORTANT (THIS WAS YOUR BUG)
       const razorpay = new window.Razorpay(options);
       razorpay.open();
 
       setLoading(false);
-    } catch (error) {
-      console.error(error);
-      alert("❌ Something went wrong");
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong ❌");
       setLoading(false);
     }
   };
