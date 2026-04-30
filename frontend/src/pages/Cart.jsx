@@ -8,11 +8,12 @@ const Cart = () => {
   const [loading, setLoading] = useState(false);
   const savedPhone = localStorage.getItem("phone");
 
-if (!savedPhone) {
-  alert("Please verify phone first");
-  navigate("/verify");
-  return;
-}
+  useEffect(() => {
+    if (!savedPhone) {
+      alert("Please verify phone first");
+      navigate("/verify");
+    }
+  }, [savedPhone, navigate]);
 
   // ✅ Load cart + phone
   useEffect(() => {

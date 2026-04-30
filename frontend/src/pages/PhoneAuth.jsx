@@ -7,16 +7,26 @@ const PhoneAuth = () => {
   const [otp, setOtp] = useState("");
   const [confirmation, setConfirmation] = useState(null);
 
-  // ✅ Send OTP
   const sendOTP = async () => {
     try {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        "recaptcha-container",
-        {
-          size: "invisible",
-        },
-        auth
-      );
+      if (!phone || phone.length !== 10) {
+        alert("Enter valid phone number");
+        return;
+      }
+
+      // Create recaptcha only once
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: () => {
+              console.log("Recaptcha verified");
+            },
+          }
+        );
+      }
 
       const appVerifier = window.recaptchaVerifier;
 
@@ -27,40 +37,51 @@ const PhoneAuth = () => {
       );
 
       setConfirmation(result);
-      alert("OTP Sent ✅");
-    } catch (err) {
-      console.error(err);
-      alert("Error sending OTP");
+      alert("OTP Sent Successfully ✅");
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
     }
   };
 
-  // ✅ Verify OTP
   const verifyOTP = async () => {
     try {
-      await confirmation.confirm(otp);
-      alert("Phone Verified ✅");
+      if (!confirmation) {
+        alert("Please send OTP first");
+        return;
+      }
 
-      // Save phone for later (Cart page)
+      await confirmation.confirm(otp);
+
       localStorage.setItem("phone", phone);
-    } catch (err) {
-      console.error(err);
+
+      alert("Phone Verified Successfully ✅");
+
+      window.location.href = "/cart";
+    } catch (error) {
+      console.error(error);
       alert("Invalid OTP ❌");
     }
   };
 
   return (
     <div className="p-6">
-      <h2 className="text-xl mb-4">📱 Phone Verification</h2>
+      <h2 className="text-2xl font-bold mb-4">
+        Phone Verification
+      </h2>
 
       <input
         type="text"
-        placeholder="Enter phone"
+        placeholder="Enter phone number"
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
-        className="border p-2 mb-3 block"
+        className="border p-2 w-full mb-3"
       />
 
-      <button onClick={sendOTP} className="bg-blue-500 text-white p-2">
+      <button
+        onClick={sendOTP}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
         Send OTP
       </button>
 
@@ -71,11 +92,13 @@ const PhoneAuth = () => {
         placeholder="Enter OTP"
         value={otp}
         onChange={(e) => setOtp(e.target.value)}
-        autoComplete="one-time-code" // ✅ auto-fill
-        className="border p-2 mt-3 block"
+        className="border p-2 w-full mt-4 mb-3"
       />
 
-      <button onClick={verifyOTP} className="bg-green-500 text-white p-2 mt-2">
+      <button
+        onClick={verifyOTP}
+        className="bg-green-500 text-white px-4 py-2 rounded"
+      >
         Verify OTP
       </button>
     </div>
