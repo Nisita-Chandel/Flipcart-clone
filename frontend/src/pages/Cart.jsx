@@ -6,16 +6,8 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
-  const savedPhone = localStorage.getItem("phone");
 
-  useEffect(() => {
-    if (!savedPhone) {
-      alert("Please verify phone first");
-      navigate("/verify");
-    }
-  }, [savedPhone, navigate]);
-
-  // ✅ Load cart + phone
+  // Load cart data
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -28,17 +20,9 @@ const Cart = () => {
     }));
 
     setCartItems(formattedCart);
-
-    const savedPhone = localStorage.getItem("phone") || "";
-    setPhone(savedPhone);
   }, []);
 
-  // ✅ Phone validation
-  const isValidPhone = (phone) => {
-    return /^[6-9]\d{9}$/.test(phone) && !/^(\d)\1{9}$/.test(phone);
-  };
-
-  // ✅ Quantity handlers
+  // Increase quantity
   const increaseQty = (id) => {
     setCartItems((items) =>
       items.map((item) =>
@@ -49,6 +33,7 @@ const Cart = () => {
     );
   };
 
+  // Decrease quantity
   const decreaseQty = (id) => {
     setCartItems((items) =>
       items.map((item) =>
@@ -59,6 +44,7 @@ const Cart = () => {
     );
   };
 
+  // Remove item
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
     setCartItems(updatedCart);
@@ -76,28 +62,30 @@ const Cart = () => {
     );
   };
 
-  // ✅ Total price
+  // Total price
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
 
-  // ✅ Load Razorpay SDK
+  // Load Razorpay SDK
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
       script.onload = () => resolve(true);
       script.onerror = () => resolve(false);
+
       document.body.appendChild(script);
     });
   };
 
-  // ✅ PAYMENT FUNCTION
+  // Payment function
   const placeOrder = async () => {
     try {
-      if (!isValidPhone(phone)) {
-        alert("❌ Enter a valid mobile number");
+      if (!phone) {
+        alert("Please enter phone number");
         return;
       }
 
@@ -106,7 +94,7 @@ const Cart = () => {
       const isLoaded = await loadRazorpayScript();
 
       if (!isLoaded) {
-        alert("Razorpay SDK failed ❌");
+        alert("Razorpay SDK failed");
         setLoading(false);
         return;
       }
@@ -125,12 +113,11 @@ const Cart = () => {
       const data = await res.json();
 
       if (!data.id) {
-        alert("❌ Order creation failed");
+        alert("Order creation failed");
         setLoading(false);
         return;
       }
 
-      // ✅ Razorpay options
       const options = {
         key: data.key,
         amount: data.amount,
@@ -144,60 +131,38 @@ const Cart = () => {
           email: "customer@email.com",
           contact: phone,
         },
-
-        method: {
-          upi: true,
-          card: true,
-          netbanking: true,
-          wallet: true,
+        notes: {
+          address: "Test Order"
         },
+      
 
         theme: {
           color: "#22c55e",
         },
 
-        handler: async function (response) {
-          try {
-            const verifyRes = await fetch(
-              "http://localhost:4000/api/payment/verify-payment",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(response),
-              }
-            );
+        handler: function (response) {
+          alert("🎉 Payment Successful");
+          console.log(response);
 
-            const result = await verifyRes.json();
-
-            if (result.success) {
-              alert("🎉 Payment Successful");
-              localStorage.removeItem("cart");
-              navigate("/success");
-            } else {
-              alert("❌ Payment verification failed");
-            }
-          } catch (err) {
-            console.error(err);
-            alert("Error verifying payment");
-          }
+          localStorage.removeItem("cart");
+          navigate("/success");
         },
 
         modal: {
           ondismiss: function () {
-            console.log("❌ Payment cancelled");
+            console.log("Payment cancelled");
             setLoading(false);
           },
         },
       };
 
-      // ✅ VERY IMPORTANT (THIS WAS YOUR BUG)
       const razorpay = new window.Razorpay(options);
       razorpay.open();
 
       setLoading(false);
     } catch (err) {
       console.error(err);
-      alert("Something went wrong ❌");
+      alert("Something went wrong");
       setLoading(false);
     }
   };
@@ -210,30 +175,55 @@ const Cart = () => {
         <p>Your cart is empty</p>
       ) : (
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Items */}
+          
+          {/* Cart Items */}
           <div className="lg:col-span-2 space-y-6">
             {cartItems.map((item) => (
-              <div key={item.id} className="bg-white p-5 rounded shadow flex gap-5">
-                <img src={item.image} className="w-24 h-24 object-contain" />
+              <div
+                key={item.id}
+                className="bg-white p-5 rounded shadow flex gap-5"
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-24 h-24 object-contain"
+                />
 
                 <div className="flex-1">
-                  <h3>{item.name}</h3>
+                  <h3 className="font-semibold">{item.name}</h3>
                   <p>₹{item.price}</p>
 
-                  <div className="flex gap-3">
-                    <button onClick={() => decreaseQty(item.id)}>-</button>
+                  <div className="flex gap-3 mt-2">
+                    <button
+                      onClick={() => decreaseQty(item.id)}
+                      className="px-3 py-1 bg-gray-200 rounded"
+                    >
+                      -
+                    </button>
+
                     <span>{item.quantity}</span>
-                    <button onClick={() => increaseQty(item.id)}>+</button>
+
+                    <button
+                      onClick={() => increaseQty(item.id)}
+                      className="px-3 py-1 bg-gray-200 rounded"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
 
-                <button onClick={() => removeItem(item.id)}>Remove</button>
+                <button
+                  onClick={() => removeItem(item.id)}
+                  className="text-red-500"
+                >
+                  Remove
+                </button>
               </div>
             ))}
           </div>
 
-          {/* Summary */}
-          <div className="bg-white p-6 rounded shadow">
+          {/* Price Summary */}
+          <div className="bg-white p-6 rounded shadow h-fit">
             <h3 className="text-lg font-semibold">Price Details</h3>
 
             <input
