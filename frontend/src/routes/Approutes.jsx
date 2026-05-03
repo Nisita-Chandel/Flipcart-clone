@@ -24,6 +24,7 @@ import Reserved from "../pages/Reserved";
 import Explore from "../pages/Explore";
 import Success from "../pages/Success";
 import PhoneAuth from "../pages/PhoneAuth";
+import Update from "../pages/Update";
 
 
 
@@ -56,6 +57,7 @@ const AppRoutes = () => {
       <Route path="/explore" element={<Explore />} />
       <Route path="/success" element={<Success/>}/>
       <Route path="/verify" element={<PhoneAuth />} />
+      <Route path="/update" element={<Update />} />
 
 
     </Routes>

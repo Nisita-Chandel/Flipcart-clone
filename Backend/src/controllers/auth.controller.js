@@ -104,9 +104,30 @@ const logoutController = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const updateProduct = async (req, res) => {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      message: "Product updated successfully",
+      updatedProduct,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Update failed",
+    });
+  }
+};
 
 module.exports = {
   registerController,
   loginController,
   logoutController,
+  updateProduct,
 };

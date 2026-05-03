@@ -103,9 +103,12 @@ const Footer = () => {
             Subscribe
           </h3>
 
-          <p className="text-gray-400 mb-3">
-            Get updates on offers & discounts.
-          </p>
+          <p
+      onClick={() => navigate("/update")}
+      className="text-gray-400 mb-3 cursor-pointer hover:text-blue-500 transition duration-300"
+    >
+      Get updates on offers & discounts.
+    </p>
 
           <div className="flex">
             <input
