@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
-  FaFacebook,
+  FaFacebookF,
   FaInstagram,
   FaTwitter,
   FaYoutube,
@@ -9,6 +9,7 @@ import {
   FaCcMastercard,
   FaCcPaypal,
   FaCcAmazonPay,
+  FaPaperPlane,
 } from "react-icons/fa";
 
 const Footer = () => {
@@ -17,7 +18,7 @@ const Footer = () => {
 
   const handleSubscribe = () => {
     if (!email) {
-      alert("Please enter your email!");
+      alert("Please enter your email");
       return;
     }
 
@@ -25,131 +26,132 @@ const Footer = () => {
     setEmail("");
   };
 
-  // NEW: Navigate to Reserved Page
   const handleReservedClick = () => {
     navigate("/reserved");
   };
 
   return (
-    <footer className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-gray-300 pt-14">
+    <footer className="relative bg-gradient-to-br from-black via-purple-950 to-indigo-950 text-white overflow-hidden">
 
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-10 text-sm">
+      {/* Background Blur Effects */}
+      <div className="absolute top-10 left-10 w-72 h-72 bg-pink-500 opacity-20 blur-3xl rounded-full"></div>
+      <div className="absolute bottom-10 right-10 w-72 h-72 bg-blue-500 opacity-20 blur-3xl rounded-full"></div>
 
-        {/* ABOUT */}
-        <div>
-          <h2 className="text-white text-2xl font-bold mb-4 cursor-pointer hover:text-indigo-300 transition">
-            <Link to="/trendystore">
-              TrendyStore
-            </Link>
-          </h2>
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-16">
 
-          <p className="text-gray-400 leading-6">
-            India's leading online shopping platform offering
-            fashion, electronics, furniture and lifestyle
-            products at amazing prices.
-          </p>
+        {/* Top Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-10">
 
-          <div className="flex gap-4 mt-5 text-lg">
-            <FaFacebook className="hover:text-white cursor-pointer transition" />
-            <FaInstagram className="hover:text-pink-400 cursor-pointer transition" />
-            <FaTwitter className="hover:text-blue-400 cursor-pointer transition" />
-            <FaYoutube className="hover:text-red-500 cursor-pointer transition" />
+          {/* Brand Section */}
+          <div>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-4">
+              <Link to="/">TrendyStore</Link>
+            </h2>
+
+            <p className="text-gray-300 leading-7 text-sm">
+              Premium shopping destination for fashion, electronics,
+              furniture, beauty & lifestyle products.
+            </p>
+
+            {/* Social Icons */}
+            <div className="flex gap-4 mt-6">
+              {[FaFacebookF, FaInstagram, FaTwitter, FaYoutube].map(
+                (Icon, index) => (
+                  <div
+                    key={index}
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md hover:bg-pink-500 transition cursor-pointer"
+                  >
+                    <Icon />
+                  </div>
+                )
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* NAVIGATION */}
-        <div>
-          <h3 className="text-gray-400 mb-4 uppercase text-xs tracking-wider">
-            Navigation
-          </h3>
+          {/* Navigation */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">Navigation</h3>
+            <ul className="space-y-3 text-gray-300">
+              <li><Link to="/" className="hover:text-pink-400">Home</Link></li>
+              <li><Link to="/products" className="hover:text-pink-400">Products</Link></li>
+              <li><Link to="/cart" className="hover:text-pink-400">Cart</Link></li>
+            </ul>
+          </div>
 
-          <ul className="space-y-3 text-white">
-            <li><Link to="/" className="hover:text-indigo-300 transition">Home</Link></li>
-            <li><Link to="/products" className="hover:text-indigo-300 transition">Products</Link></li>
-            <li><Link to="/cart" className="hover:text-indigo-300 transition">Cart</Link></li>
-          </ul>
-        </div>
+          {/* About */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">About</h3>
+            <ul className="space-y-3 text-gray-300">
+              <li><Link to="/about">About Us</Link></li>
+              <li><Link to="/contact">Contact Us</Link></li>
+              <li><Link to="/careers">Careers</Link></li>
+            </ul>
+          </div>
 
-        {/* ABOUT LINKS */}
-        <div>
-          <h3 className="text-gray-400 mb-4 uppercase text-xs tracking-wider">
-            About
-          </h3>
+          {/* Help */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">Help</h3>
+            <ul className="space-y-3 text-gray-300">
+              <li><Link to="/payments">Payments</Link></li>
+              <li><Link to="/shipping">Shipping</Link></li>
+              <li><Link to="/returns">Returns</Link></li>
+              <li><Link to="/faq">FAQ</Link></li>
+            </ul>
+          </div>
 
-          <ul className="space-y-3 text-white">
-            <li><Link to="/contact" className="hover:text-indigo-300 transition">Contact Us</Link></li>
-            <li><Link to="/about" className="hover:text-indigo-300 transition">About Us</Link></li>
-            <li><Link to="/careers" className="hover:text-indigo-300 transition">Careers</Link></li>
-          </ul>
-        </div>
+          {/* Newsletter */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">
+              Exclusive Offers ✨
+            </h3>
 
-        {/* HELP */}
-        <div>
-          <h3 className="text-gray-400 mb-4 uppercase text-xs tracking-wider">
-            Help
-          </h3>
-
-          <ul className="space-y-3 text-white">
-            <li><Link to="/payments" className="hover:text-indigo-300 transition">Payments</Link></li>
-            <li><Link to="/shipping" className="hover:text-indigo-300 transition">Shipping</Link></li>
-            <li><Link to="/returns" className="hover:text-indigo-300 transition">Returns</Link></li>
-            <li><Link to="/faq" className="hover:text-indigo-300 transition">FAQ</Link></li>
-          </ul>
-        </div>
-
-        {/* NEWSLETTER */}
-        <div>
-          <h3 className="text-gray-400 mb-4 uppercase text-xs tracking-wider">
-            Subscribe
-          </h3>
-
-          <p
-      onClick={() => navigate("/update")}
-      className="text-gray-400 mb-3 cursor-pointer hover:text-blue-500 transition duration-300"
-    >
-      Get updates on offers & discounts.
-    </p>
-
-          <div className="flex">
-            <input
-              type="email"
-              placeholder="Your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="px-3 py-2 rounded-l-md text-black w-full outline-none"
-            />
-
-            <button
-              onClick={handleSubscribe}
-              className="bg-indigo-600 px-4 py-2 rounded-r-md hover:bg-indigo-700 transition text-white"
+            <p
+              onClick={() => navigate("/update")}
+              className="text-gray-300 mb-4 cursor-pointer hover:text-pink-400 transition"
             >
-              Go
-            </button>
+              Get updates on offers & discounts
+            </p>
+
+            {/* Glassmorphism Input */}
+            <div className="flex bg-white/10 backdrop-blur-lg rounded-full overflow-hidden border border-white/20">
+              <input
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-transparent px-4 py-3 w-full outline-none text-white placeholder-gray-400"
+              />
+
+              <button
+                onClick={handleSubscribe}
+                className="bg-gradient-to-r from-pink-500 to-purple-600 px-5 hover:scale-105 transition"
+              >
+                <FaPaperPlane />
+              </button>
+            </div>
           </div>
         </div>
 
-      </div>
+        {/* Bottom Section */}
+        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
 
-      {/* PAYMENT */}
-      <div className="max-w-7xl mx-auto px-6 mt-12 border-t border-indigo-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
+          {/* Payment Icons */}
+          <div className="flex gap-5 text-3xl text-gray-300">
+            <FaCcVisa className="hover:text-blue-400 transition" />
+            <FaCcMastercard className="hover:text-red-400 transition" />
+            <FaCcPaypal className="hover:text-blue-500 transition" />
+            <FaCcAmazonPay className="hover:text-yellow-400 transition" />
+          </div>
 
-        <div className="flex gap-6 text-2xl text-gray-400">
-          <FaCcVisa />
-          <FaCcMastercard />
-          <FaCcPaypal />
-          <FaCcAmazonPay />
+          {/* Copyright */}
+          <p
+            onClick={handleReservedClick}
+            className="text-gray-400 text-sm cursor-pointer hover:text-white hover:underline transition"
+          >
+            © 2026 TrendyStore. All rights reserved.
+          </p>
         </div>
-
-        {/* UPDATED COPYRIGHT (Clickable) */}
-        <p
-          onClick={handleReservedClick}
-          className="text-gray-400 text-sm text-center md:text-right cursor-pointer hover:text-white hover:underline transition"
-        >
-          © 2026 TrendyStore. All rights reserved.
-        </p>
-
       </div>
-
     </footer>
   );
 };

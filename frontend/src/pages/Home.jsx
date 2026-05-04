@@ -5,6 +5,7 @@ import {
   FaSearch,
   FaHeart,
   FaArrowRight,
+  FaStar,
 } from "react-icons/fa";
 import { useState } from "react";
 
@@ -15,6 +16,7 @@ const products = [
     price: 1999,
     img: "https://i.pinimg.com/736x/c0/9d/b5/c09db5748e423667f2827f68481f1c02.jpg",
     category: "Fashion",
+    rating: 4.8,
   },
   {
     id: 2,
@@ -22,6 +24,7 @@ const products = [
     price: 4999,
     img: "https://i.pinimg.com/1200x/45/f9/83/45f983a60e38b6182b3b42e871e2ee86.jpg",
     category: "Furniture",
+    rating: 4.7,
   },
   {
     id: 3,
@@ -29,6 +32,7 @@ const products = [
     price: 7999,
     img: "https://i.pinimg.com/1200x/0b/f5/7e/0bf57e9b54ee33e7765ebd8bebb7b407.jpg",
     category: "Electronics",
+    rating: 4.9,
   },
   {
     id: 4,
@@ -36,166 +40,164 @@ const products = [
     price: 999,
     img: "https://i.pinimg.com/736x/96/a5/17/96a5177c29eb65c1485b653d635257ad.jpg",
     category: "Beauty",
+    rating: 4.6,
   },
 ];
 
 const categories = [
-  { name: "Fashion", route: "/ladies" },
-  { name: "Furniture", route: "/furniture" },
-  { name: "Electronics", route: "/electronics" },
-  { name: "Beauty", route: "/beauty" },
+  { name: "Fashion", route: "/ladies", emoji: "👗" },
+  { name: "Furniture", route: "/furniture", emoji: "🪑" },
+  { name: "Electronics", route: "/electronics", emoji: "📱" },
+  { name: "Beauty", route: "/beauty", emoji: "💄" },
 ];
 
 const Home = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  const goToDetails = (product) => {
-    if (product.id === 1) navigate("/ladies");
-    else if (product.id === 2) navigate("/furniture");
-    else if (product.id === 3) navigate("/electronics");
-    else if (product.id === 4) navigate("/beauty");
-    else navigate("/details", { state: product });
-  };
-
-  const filteredProducts = products.filter((p) =>
-    p.title.toLowerCase().includes(search.toLowerCase())
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-100 min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-black text-white overflow-hidden">
 
-      {/* NAVBAR */}
-      <div className="backdrop-blur-md bg-white/70 shadow-md px-8 py-4 flex justify-between items-center sticky top-0 z-50">
+      {/* Floating Background Blur */}
+      <div className="absolute top-20 left-20 w-72 h-72 bg-pink-500 rounded-full blur-3xl opacity-20"></div>
+      <div className="absolute bottom-20 right-20 w-72 h-72 bg-blue-500 rounded-full blur-3xl opacity-20"></div>
+
+      {/* Navbar */}
+      <div className="sticky top-0 z-50 backdrop-blur-lg bg-white/10 border-b border-white/20 px-8 py-4 flex justify-between items-center">
         <h1
           onClick={() => navigate("/")}
-          className="text-2xl font-bold text-indigo-600 cursor-pointer hover:scale-105 transition"
+          className="text-3xl font-bold cursor-pointer bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent"
         >
           TrendyStore
         </h1>
 
         <div className="flex items-center gap-5">
-          <div className="flex items-center bg-gray-100 px-4 py-2 rounded-xl shadow-sm">
-            <FaSearch className="text-gray-400 mr-2" />
+          <div className="flex items-center bg-white/20 px-4 py-2 rounded-xl">
+            <FaSearch className="mr-2 text-gray-300" />
             <input
               type="text"
               placeholder="Search products..."
-              className="bg-transparent outline-none text-sm"
+              className="bg-transparent outline-none text-white"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
-          <div
+          <FaShoppingCart
+            size={24}
+            className="cursor-pointer hover:scale-110 transition"
             onClick={() => navigate("/cart")}
-            className="relative cursor-pointer hover:scale-110 transition"
-          >
-            <FaShoppingCart size={22} className="text-indigo-600" />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-              2
-            </span>
-          </div>
+          />
         </div>
       </div>
 
-      {/* HERO SECTION */}
-      <div className="text-center py-28 px-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white relative overflow-hidden">
-
-        <motion.h2
+      {/* Hero Section */}
+      <div className="text-center py-24 px-6 relative">
+        <motion.h1
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl md:text-6xl font-extrabold"
+          className="text-6xl font-extrabold leading-tight"
         >
-          Big Billion Days Sale 🎉
-        </motion.h2>
+          Premium Shopping <br />
+          Experience ✨
+        </motion.h1>
 
-        <p className="mt-6 text-lg opacity-90">
-          Up to <span className="font-bold">70% OFF</span> on all categories
+        <p className="mt-6 text-gray-300 text-lg">
+          Discover fashion, electronics, furniture & beauty products
         </p>
 
         <button
           onClick={() => navigate("/shipping")}
-          className="mt-8 bg-white text-indigo-600 px-8 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 hover:bg-gray-100 transition flex items-center gap-2 mx-auto"
+          className="mt-8 bg-gradient-to-r from-pink-500 to-purple-600 px-8 py-3 rounded-full font-semibold hover:scale-105 transition shadow-xl"
         >
-          Shop Now <FaArrowRight />
+          Shop Now <FaArrowRight className="inline ml-2" />
         </button>
       </div>
 
-      {/* CATEGORY SECTION (NEW) */}
+      {/* Categories */}
       <div className="px-8 py-16 max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-10">
-          🛍️ Shop by Category
+        <h2 className="text-4xl font-bold text-center mb-10">
+          Shop Categories
         </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-4 gap-6">
           {categories.map((cat, index) => (
             <motion.div
               key={index}
               whileHover={{ scale: 1.08 }}
               onClick={() => navigate(cat.route)}
-              className="cursor-pointer bg-white p-6 rounded-2xl shadow-md text-center hover:shadow-xl transition"
+              className="backdrop-blur-lg bg-white/10 p-6 rounded-2xl text-center cursor-pointer border border-white/20 hover:bg-white/20 transition"
             >
-              <h3 className="font-semibold text-lg text-indigo-600">
-                {cat.name}
-              </h3>
+              <div className="text-4xl mb-3">{cat.emoji}</div>
+              <h3 className="text-xl font-semibold">{cat.name}</h3>
             </motion.div>
           ))}
         </div>
       </div>
 
-      {/* PRODUCTS */}
+      {/* Products */}
       <div className="px-8 pb-20 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold mb-12 text-center">
-          🔥 Trending Products
+        <h2 className="text-4xl font-bold text-center mb-12">
+          Trending Products 🔥
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8">
           {filteredProducts.map((product) => (
             <motion.div
               key={product.id}
               whileHover={{ y: -10 }}
-              className="bg-white p-5 rounded-2xl shadow-md hover:shadow-2xl transition cursor-pointer relative group"
-              onClick={() => goToDetails(product)}
+              className="backdrop-blur-lg bg-white/10 p-5 rounded-2xl border border-white/20 hover:shadow-2xl transition cursor-pointer"
             >
-              <FaHeart
-                className="absolute top-4 right-4 text-gray-400 group-hover:text-red-500 transition"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate("/favorite");
-                }}
-              />
-
               <img
                 src={product.img}
-                className="h-44 w-full object-contain mb-4 group-hover:scale-105 transition"
                 alt={product.title}
+                className="w-full h-48 object-cover rounded-xl"
               />
 
-              <h3 className="font-semibold text-sm">{product.title}</h3>
+              <h3 className="mt-4 text-lg font-semibold">
+                {product.title}
+              </h3>
 
-              <p className="text-indigo-600 font-bold mt-1 text-lg">
-                ₹{product.price}
-              </p>
+              <div className="flex items-center justify-between mt-2">
+                <p className="text-pink-400 font-bold text-xl">
+                  ₹{product.price}
+                </p>
 
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate("/cart");
-                }}
-                className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
-              >
-                Add to Cart
-              </button>
+                <div className="flex items-center gap-1 text-yellow-400">
+                  <FaStar />
+                  {product.rating}
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-4">
+                <button
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 py-2 rounded-lg hover:scale-105 transition"
+                  onClick={() => navigate("/cart")}
+                >
+                  Add to Cart
+                </button>
+
+                <button
+                  className="p-3 bg-white/20 rounded-lg hover:bg-red-500 transition"
+                >
+                  <FaHeart />
+                </button>
+              </div>
             </motion.div>
           ))}
         </div>
       </div>
 
-      {/* FOOTER */}
-      <div className="bg-indigo-900 text-white text-center py-6">
-        <p className="text-sm">© 2026 TrendyStore. All rights reserved.</p>
+      {/* Footer */}
+      <div className="bg-black/40 backdrop-blur-lg text-center py-6 border-t border-white/10">
+        <p className="text-gray-300">
+          © 2026 TrendyStore | Premium Shopping Experience
+        </p>
       </div>
-
     </div>
   );
 };
