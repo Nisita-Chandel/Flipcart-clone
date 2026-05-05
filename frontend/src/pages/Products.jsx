@@ -1,10 +1,16 @@
 import { useEffect, useState, useMemo } from "react";
 import API from "../services/api";
-import { FaHeart, FaSearch, FaMicrophone } from "react-icons/fa";
+import {
+  FaHeart,
+  FaSearch,
+  FaMicrophone,
+  FaShoppingCart,
+  FaStar,
+} from "react-icons/fa";
 
 const categories = ["All", "Electronics", "Fashion", "Home"];
 
-// 🔥 Better fuzzy match (checks sequence)
+// Fuzzy Search
 const fuzzyMatch = (text, search) => {
   let t = text.toLowerCase();
   let s = search.toLowerCase();
@@ -17,13 +23,18 @@ const fuzzyMatch = (text, search) => {
   return false;
 };
 
-// 🔥 Highlight match
+// Highlight Search Text
 const highlightText = (text, search) => {
   if (!search) return text;
+
   const regex = new RegExp(`(${search})`, "gi");
+
   return text.split(regex).map((part, i) =>
     part.toLowerCase() === search.toLowerCase() ? (
-      <span key={i} className="bg-yellow-200 px-1 rounded">
+      <span
+        key={i}
+        className="bg-yellow-300 text-black px-1 rounded"
+      >
         {part}
       </span>
     ) : (
@@ -41,7 +52,6 @@ const Products = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
 
-  // 🔥 Load products + recent searches
   useEffect(() => {
     API.get("/products")
       .then((res) => {
@@ -50,22 +60,29 @@ const Products = () => {
       })
       .catch(() => setLoading(false));
 
-    const stored = JSON.parse(localStorage.getItem("recentSearches")) || [];
+    const stored =
+      JSON.parse(localStorage.getItem("recentSearches")) || [];
     setRecentSearches(stored);
   }, []);
 
-  // 🔥 Save search history
   const saveSearch = (value) => {
     if (!value) return;
 
-    let updated = [value, ...recentSearches.filter((s) => s !== value)];
+    let updated = [
+      value,
+      ...recentSearches.filter((s) => s !== value),
+    ];
+
     updated = updated.slice(0, 5);
 
     setRecentSearches(updated);
-    localStorage.setItem("recentSearches", JSON.stringify(updated));
+    localStorage.setItem(
+      "recentSearches",
+      JSON.stringify(updated)
+    );
   };
 
-  // 🔥 Voice Search
+  // Voice Search
   const handleVoiceSearch = () => {
     const recognition = new window.webkitSpeechRecognition();
     recognition.start();
@@ -85,7 +102,6 @@ const Products = () => {
     );
   };
 
-  // 🔥 Filtered products
   const filteredProducts = useMemo(() => {
     const searchText = search.toLowerCase().trim();
 
@@ -102,7 +118,6 @@ const Products = () => {
     });
   }, [products, search, activeCategory]);
 
-  // 🔥 Suggestions (products + history)
   const suggestions = useMemo(() => {
     if (!search) return recentSearches;
 
@@ -113,59 +128,69 @@ const Products = () => {
       .slice(0, 3)
       .map((p) => p.name);
 
-    return [...new Set([...productMatches, ...recentSearches])].slice(0, 5);
+    return [...new Set([...productMatches, ...recentSearches])].slice(
+      0,
+      5
+    );
   }, [search, products, recentSearches]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 px-6 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-indigo-900 text-white px-6 py-10 relative overflow-hidden">
 
-      {/* HEADER */}
-      <div className="text-center mb-10">
-        <h1 className="text-5xl font-extrabold text-gray-900">
-          Premium Store ✨
+      {/* Background Blur */}
+      <div className="absolute top-20 left-20 w-72 h-72 bg-pink-500 opacity-20 blur-3xl rounded-full"></div>
+      <div className="absolute bottom-20 right-20 w-72 h-72 bg-blue-500 opacity-20 blur-3xl rounded-full"></div>
+
+      {/* Header */}
+      <div className="text-center mb-12 relative z-10">
+        <h1 className="text-5xl font-extrabold">
+          Premium Products ✨
         </h1>
-        <p className="text-gray-500 mt-3">
-          AI-powered shopping experience
+        <p className="text-gray-300 mt-3">
+          Explore trending collections
         </p>
       </div>
 
-      {/* 🔍 SEARCH BAR */}
-      <div className="max-w-xl mx-auto mb-6 relative">
-        <input
-          type="text"
-          placeholder="Search products..."
-          className="w-full py-3 pl-12 pr-12 rounded-full border shadow-md focus:ring-2 focus:ring-indigo-400 outline-none"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setShowSuggestions(true);
-          }}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") saveSearch(search);
-          }}
-        />
+      {/* Search Bar */}
+      <div className="max-w-2xl mx-auto mb-8 relative z-10">
+        <div className="backdrop-blur-lg bg-white/10 border border-white/20 rounded-full overflow-hidden flex items-center px-4 py-3 shadow-lg">
+          <FaSearch className="text-gray-300 mr-3" />
 
-        <FaSearch className="absolute top-4 left-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="w-full bg-transparent outline-none text-white placeholder-gray-300"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setShowSuggestions(true);
+            }}
+            onBlur={() =>
+              setTimeout(() => setShowSuggestions(false), 200)
+            }
+            onKeyDown={(e) => {
+              if (e.key === "Enter") saveSearch(search);
+            }}
+          />
 
-        {/* 🎤 Voice Button */}
-        <FaMicrophone
-          onClick={handleVoiceSearch}
-          className="absolute top-4 right-4 text-gray-500 cursor-pointer hover:text-indigo-600"
-        />
+          <FaMicrophone
+            onClick={handleVoiceSearch}
+            className="cursor-pointer hover:text-pink-400 transition"
+          />
+        </div>
 
-        {/* 🔥 Suggestions */}
+        {/* Suggestions */}
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute w-full bg-white mt-2 rounded-xl shadow-lg z-50">
+          <div className="absolute w-full bg-white text-black rounded-2xl mt-3 shadow-xl z-50">
             {suggestions.map((item, i) => (
               <div
                 key={i}
+                className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
                 onClick={() => {
                   setSearch(item);
                   saveSearch(item);
                   setShowSuggestions(false);
                 }}
-                className="px-4 py-3 hover:bg-indigo-50 cursor-pointer"
               >
                 {highlightText(item, search)}
               </div>
@@ -174,65 +199,101 @@ const Products = () => {
         )}
       </div>
 
-      {/* CATEGORY */}
-      <div className="flex justify-center gap-4 mb-12 flex-wrap">
+      {/* Categories */}
+      <div className="flex justify-center gap-4 mb-12 flex-wrap relative z-10">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-5 py-2 rounded-full text-sm font-semibold
-              ${
-                activeCategory === cat
-                  ? "bg-indigo-600 text-white scale-105"
-                  : "bg-white text-gray-600 border"
-              }`}
+            className={`px-6 py-2 rounded-full font-semibold transition duration-300 ${
+              activeCategory === cat
+                ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white scale-105"
+                : "bg-white/10 backdrop-blur-lg border border-white/20"
+            }`}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      {/* PRODUCTS */}
+      {/* Loading Skeleton */}
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="h-64 bg-gray-200 rounded-2xl animate-pulse"></div>
+            <div
+              key={i}
+              className="h-72 rounded-2xl bg-white/10 animate-pulse"
+            ></div>
           ))}
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+          {/* Product Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 relative z-10">
             {filteredProducts.map((product) => (
-              <div key={product._id} className="bg-white rounded-2xl shadow hover:shadow-xl transition">
-
-                <div className="h-56 flex items-center justify-center bg-gray-100">
-                  <img src={product.image} alt="" className="h-full object-contain" />
+              <div
+                key={product._id}
+                className="backdrop-blur-lg bg-white/10 border border-white/20 rounded-3xl overflow-hidden shadow-xl hover:scale-105 hover:shadow-2xl transition duration-300"
+              >
+                {/* Image Preview */}
+                <div className="h-56 bg-white flex items-center justify-center">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-full object-contain hover:scale-110 transition duration-300"
+                  />
                 </div>
 
-                <div className="p-4">
-                  <h3 className="font-bold">
-                    {highlightText(product.name, search)}
-                  </h3>
+                <div className="p-5">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-bold text-lg">
+                      {highlightText(product.name, search)}
+                    </h3>
 
-                  <p className="text-gray-500 text-sm">
+                    <button
+                      onClick={() =>
+                        toggleWishlist(product._id)
+                      }
+                    >
+                      <FaHeart
+                        className={`${
+                          wishlist.includes(product._id)
+                            ? "text-red-500"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  <p className="text-gray-300 text-sm mt-2">
                     {product.category}
                   </p>
 
-                  <p className="text-xl font-bold mt-2">
-                    ₹{product.price}
-                  </p>
+                  <div className="flex justify-between items-center mt-3">
+                    <p className="text-2xl font-bold text-pink-400">
+                      ₹{product.price}
+                    </p>
 
-                  <button className="mt-3 w-full py-2 bg-indigo-600 text-white rounded-xl">
-                    Add to Cart 🛒
+                    <div className="flex items-center gap-1 text-yellow-400">
+                      <FaStar />
+                      4.8
+                    </div>
+                  </div>
+
+                  {/* Button */}
+                  <button className="mt-5 w-full py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 hover:scale-105 transition duration-300 flex justify-center items-center gap-2">
+                    <FaShoppingCart />
+                    Add to Cart
                   </button>
                 </div>
               </div>
             ))}
           </div>
 
+          {/* Empty State */}
           {filteredProducts.length === 0 && (
             <div className="text-center mt-20">
-              <h2 className="text-2xl font-bold text-gray-600">
+              <h2 className="text-3xl font-bold text-gray-300">
                 No Products Found 😢
               </h2>
             </div>

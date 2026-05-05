@@ -1,102 +1,127 @@
-import { FaShippingFast, FaLock, FaHeadset, FaTags } from "react-icons/fa";
+import {
+  FaShippingFast,
+  FaLock,
+  FaHeadset,
+  FaTags,
+  FaUsers,
+  FaShoppingBag,
+} from "react-icons/fa";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-indigo-900 text-white relative overflow-hidden">
+
+      {/* Floating Blur Effects */}
+      <div className="absolute top-20 left-20 w-72 h-72 bg-pink-500 opacity-20 blur-3xl rounded-full"></div>
+      <div className="absolute bottom-20 right-20 w-72 h-72 bg-blue-500 opacity-20 blur-3xl rounded-full"></div>
 
       {/* Hero Section */}
-      <div className="text-center py-16 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          About Flipcart
+      <div className="relative z-10 text-center py-20 px-6">
+        <h1 className="text-5xl md:text-6xl font-bold mb-5 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+          About SastaFlipkart ✨
         </h1>
-        <p className="max-w-2xl mx-auto text-lg opacity-90">
-          Your trusted online shopping partner delivering quality products,
-          unbeatable prices, and seamless shopping experiences.
+
+        <p className="max-w-3xl mx-auto text-lg text-gray-300">
+          Your trusted online shopping destination offering premium
+          products, amazing discounts, secure payments, and
+          lightning-fast delivery.
         </p>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-6 py-16">
+      {/* Mission Section */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-10 text-center">
+        <h2 className="text-4xl font-bold mb-5">
+          Our Mission 🚀
+        </h2>
 
-        {/* Mission Section */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">
-            Our Mission
-          </h2>
-          <p className="text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            At <span className="font-semibold text-indigo-600">Flipcart</span>, 
-            we aim to make online shopping simple, affordable, and reliable 
-            for everyone. We bring you a wide variety of quality products 
-            with fast delivery and secure payment options.
-          </p>
-        </div>
+        <p className="text-gray-300 max-w-3xl mx-auto leading-relaxed text-lg">
+          At <span className="text-pink-400 font-bold">SastaFlipkart</span>,
+          our mission is to make online shopping affordable,
+          convenient, and enjoyable for everyone by delivering
+          high-quality products with modern shopping experiences.
+        </p>
+      </div>
 
-        {/* Why Choose Us */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+      {/* Why Choose Us */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-          <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 text-center">
-            <FaTags className="text-indigo-600 text-4xl mx-auto mb-4" />
-            <h3 className="font-semibold text-lg mb-2">Best Prices</h3>
-            <p className="text-gray-600 text-sm">
-              Affordable pricing with amazing discounts and offers.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 text-center">
-            <FaLock className="text-indigo-600 text-4xl mx-auto mb-4" />
-            <h3 className="font-semibold text-lg mb-2">Secure Payments</h3>
-            <p className="text-gray-600 text-sm">
-              100% safe and secure payment options for your peace of mind.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 text-center">
-            <FaShippingFast className="text-indigo-600 text-4xl mx-auto mb-4" />
-            <h3 className="font-semibold text-lg mb-2">Fast Delivery</h3>
-            <p className="text-gray-600 text-sm">
-              Quick and reliable shipping across the country.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 text-center">
-            <FaHeadset className="text-indigo-600 text-4xl mx-auto mb-4" />
-            <h3 className="font-semibold text-lg mb-2">24/7 Support</h3>
-            <p className="text-gray-600 text-sm">
-              Our support team is always ready to assist you.
-            </p>
-          </div>
-
-        </div>
-
-        {/* Stats Section */}
-        <div className="bg-indigo-600 text-white rounded-2xl p-10 text-center mb-16 shadow-lg">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-3xl font-bold">10K+</h3>
-              <p className="opacity-90">Happy Customers</p>
+        {[
+          {
+            icon: <FaTags />,
+            title: "Best Prices",
+            desc: "Amazing offers and unbeatable discounts.",
+          },
+          {
+            icon: <FaLock />,
+            title: "Secure Payments",
+            desc: "100% safe transactions for every purchase.",
+          },
+          {
+            icon: <FaShippingFast />,
+            title: "Fast Delivery",
+            desc: "Quick delivery at your doorstep.",
+          },
+          {
+            icon: <FaHeadset />,
+            title: "24/7 Support",
+            desc: "Always available customer support team.",
+          },
+        ].map((item, index) => (
+          <div
+            key={index}
+            className="backdrop-blur-lg bg-white/10 border border-white/20 rounded-3xl p-8 text-center hover:scale-105 hover:shadow-2xl transition duration-300"
+          >
+            <div className="text-5xl text-pink-400 mb-4 flex justify-center">
+              {item.icon}
             </div>
-            <div>
-              <h3 className="text-3xl font-bold">5K+</h3>
-              <p className="opacity-90">Products Available</p>
+
+            <h3 className="text-xl font-bold mb-3">
+              {item.title}
+            </h3>
+
+            <p className="text-gray-300 text-sm">
+              {item.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Stats Section */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-10">
+        <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-10">
+
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div className="hover:scale-105 transition">
+              <FaUsers className="text-4xl text-pink-400 mx-auto mb-3" />
+              <h3 className="text-4xl font-bold">10K+</h3>
+              <p className="text-gray-300">Happy Customers</p>
             </div>
-            <div>
-              <h3 className="text-3xl font-bold">99%</h3>
-              <p className="opacity-90">Customer Satisfaction</p>
+
+            <div className="hover:scale-105 transition">
+              <FaShoppingBag className="text-4xl text-purple-400 mx-auto mb-3" />
+              <h3 className="text-4xl font-bold">5K+</h3>
+              <p className="text-gray-300">Products Available</p>
+            </div>
+
+            <div className="hover:scale-105 transition">
+              <FaHeadset className="text-4xl text-blue-400 mx-auto mb-3" />
+              <h3 className="text-4xl font-bold">99%</h3>
+              <p className="text-gray-300">Customer Satisfaction</p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Closing Section */}
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Thank You for Choosing Us ❤️
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            We’re constantly improving to provide you with the best online 
-            shopping experience. Your trust motivates us to do better every day.
-          </p>
-        </div>
+      {/* Closing Section */}
+      <div className="relative z-10 text-center py-20 px-6">
+        <h2 className="text-4xl font-bold mb-5">
+          Thank You For Shopping With Us ❤️
+        </h2>
 
+        <p className="max-w-3xl mx-auto text-gray-300 text-lg">
+          We continuously improve our platform to provide a world-class
+          shopping experience. Your trust motivates us every day.
+        </p>
       </div>
     </div>
   );
